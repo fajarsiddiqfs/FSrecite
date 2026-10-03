@@ -1,1 +1,218 @@
-Bismillah
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fajar Siddiq Recites — Qur'an by heart journey</title>
+<meta name="description" content="Fajar Siddiq's Qur'an by heart journey: recitation, memorisation and reflection.">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;800&family=Amiri+Quran&family=Fraunces:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--fg:#0b0b0f;--muted:#74747d;--line:#e9e9ee;--soft:#f3f3f6}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--fg);font:400 1.125rem/1.55 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:3px solid #6736DD;outline-offset:3px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+section{padding:56px 0 0}
+.label{text-align:center;font-size:1rem;margin:0 0 28px}
+
+/* HERO — text on the left, photo always beside it on the right (phone too) */
+.hero{position:relative;overflow:hidden;min-height:clamp(300px,52vw,470px)}
+.hero .wrap{display:flex;align-items:center;min-height:clamp(300px,52vw,470px)}
+.hero-text{position:relative;z-index:2;max-width:54%;padding:32px 0}
+.hero h1{font-size:clamp(2.1rem,9vw,5rem);font-weight:800;line-height:1;margin:0 0 14px;letter-spacing:-.04em}
+.hero .tag{font-size:clamp(.95rem,3.6vw,1.65rem);line-height:1.28;margin:0 0 12px}
+.hero small{display:block;font-size:clamp(.68rem,2.2vw,.8rem);color:#333;line-height:1.4}
+.hero-img{position:absolute;right:0;top:0;bottom:0;width:50%;margin:0;z-index:1}
+.hero-img img{width:100%;height:100%;object-fit:contain;object-position:right bottom;margin:0}
+@media(min-width:800px){.hero-text{max-width:46%}.hero-img{width:52%}}
+
+/* PLAYERS — plain, no boxes, like the mockup */
+.player iframe{width:100%;border:0;display:block}
+.placeholder{display:grid;place-items:center;min-height:150px;border:1px dashed #cfcfd8;border-radius:12px;color:var(--muted);font-size:.85rem;text-align:center;padding:12px}
+.featured{max-width:760px;margin:0 auto}
+
+/* AS SEEN ON */
+.seen ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 44px;font-size:1.25rem}
+.seen a{text-decoration:none}.seen a:hover{text-decoration:underline}
+
+/* LISTEN NOW — big photo + player left, three players right */
+.listen{display:grid;gap:20px}
+.listen-right{display:grid;gap:14px;align-content:start}
+.bigphoto{aspect-ratio:1/1;border-radius:18px;overflow:hidden;background:var(--soft);margin-bottom:12px}
+.bigphoto img{width:100%;height:100%;object-fit:cover}
+@media(min-width:800px){.listen{grid-template-columns:1fr 1fr;gap:28px}}
+
+/* MEMORISING NOW */
+.mem{text-align:center}
+.bismillah{font-family:"Amiri Quran",serif;font-size:clamp(2.2rem,8vw,3.4rem);margin:0;line-height:1.5}
+.mem .trans{color:var(--muted);font-size:.85rem;margin:0 0 30px}
+.ayah{font-family:"Amiri Quran",serif;font-size:clamp(1.8rem,6.6vw,3.1rem);line-height:2.2;margin:0 auto;max-width:900px}
+.ayah .b{color:#2b45d6}.ayah .r{color:#d62b2b}.ayah .g{color:#1a9a2e}
+
+/* REFLECTIONS — photo card + grey caption strip */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:800px){.grid{grid-template-columns:repeat(4,1fr)}}
+.ref{text-decoration:none;border-radius:8px;overflow:hidden;background:var(--soft);display:flex;flex-direction:column;transition:transform .2s}
+.ref:hover{transform:translateY(-3px)}
+.art{aspect-ratio:1/.82;padding:12px;color:#fff;display:flex;flex-direction:column;justify-content:center;background-size:cover;background-position:center;position:relative}
+.art::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.28)}
+.art>*{position:relative;z-index:1}
+.art small{font-size:.6rem;line-height:1.35;opacity:.9;margin-bottom:6px}
+.art small b{display:block;font-weight:400;font-size:.68rem}
+.art strong{font-family:Fraunces,serif;font-weight:400;font-size:clamp(1.25rem,5vw,1.75rem);line-height:1.05;letter-spacing:-.01em}
+.art i{font-style:italic}
+.ref p{margin:0;padding:8px 10px 10px;font-size:.72rem;font-weight:500;line-height:1.35}
+
+/* IMAGE PLACEHOLDERS — shown until the real picture loads */
+.ph{position:relative;background:var(--soft)}
+.ph::before{content:attr(data-ph);position:absolute;inset:10px;display:grid;place-items:center;text-align:center;padding:16px;color:var(--muted);font-size:.85rem;line-height:1.4;border:2px dashed #cfcfd8;border-radius:12px}
+.ph.ok{background:none}.ph.ok::before{display:none}
+.ph img{position:relative;z-index:1}
+.studio.ph:not(.ok){min-height:260px}
+
+/* ABOUT */
+.about h2{font-size:clamp(2.4rem,9.5vw,3.6rem);font-weight:800;text-align:center;margin:0 0 32px;letter-spacing:-.035em;line-height:1.05}
+.about .copy{max-width:700px;margin:0 auto;text-align:left}
+.about p{margin:0 0 1.5em}
+
+/* STUDIO — full-width, bleeds to the bottom */
+.studio{margin-top:24px;background:#fff}
+.studio img{width:100%;height:auto}
+footer{padding:16px 0 28px;text-align:center;color:var(--muted);font-size:.8rem}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <h1>Fajar Siddiq</h1>
+      <p class="tag">Qur’an by heart journey to Recitation, Memorisation &amp; Reflection.</p>
+      <small>Not a Scholar, Ustaz, Imam, Reciter but a muslim.</small>
+    </div>
+  </div>
+  <div class="hero-img ph" data-ph="Photo goes here: upload images/hero.png"><img src="images/hero.png" alt="Fajar Siddiq recording at a microphone" onload="this.parentNode.classList.add('ok')" onerror="this.style.display='none'"></div>
+</header>
+
+<!-- FEATURED TRACK -->
+<section class="wrap"><div class="featured" id="featured"></div></section>
+
+<!-- AS SEEN ON -->
+<section class="wrap seen">
+  <p class="label">As seen on:</p>
+  <ul>
+    <li><a href="https://ramadanmakers.com" target="_blank" rel="noopener">Ramadan Makers</a></li>
+    <li><a href="#" target="_blank" rel="noopener">Ayaat</a></li>
+    <li><a href="https://rawiapp.xyz" target="_blank" rel="noopener">Rawi</a></li>
+    <li><a href="https://ilmproduction.com" target="_blank" rel="noopener">Ilm</a></li>
+    <li><a href="https://remotemuslims.com" target="_blank" rel="noopener">Remote Muslims</a></li>
+  </ul>
+</section>
+
+<!-- LISTEN NOW -->
+<section class="wrap">
+  <p class="label">Listen now:</p>
+  <div class="listen">
+    <div>
+      <div class="bigphoto ph" data-ph="Photo goes here: upload images/listen-main.jpg"><img src="images/listen-main.jpg" alt="Fajar Siddiq" onload="this.parentNode.classList.add('ok')" onerror="this.style.display='none'"></div>
+      <div id="listen-main"></div>
+    </div>
+    <div class="listen-right" id="listen-list"></div>
+  </div>
+</section>
+
+<!-- MEMORISING NOW -->
+<section class="wrap mem">
+  <p class="label">Memorising now:</p>
+  <p class="bismillah" lang="ar" dir="rtl">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+  <p class="trans">In the Name of Allah—the Most Compassionate, Most Merciful</p>
+  <p class="ayah" lang="ar" dir="rtl">سَبَّحَ لِلَّهِ مَا فِى ٱلسَّمَـٰوَٰتِ وَمَا فِى <span class="b">ٱلْأَرْضِ</span> ۖ وَهُوَ ٱلْعَزِيزُ ٱلْحَكِيمُ ﴿١﴾ هُوَ <span class="b">ٱلَّذِىٓ</span> <span class="r">أَخْرَجَ</span> ٱلَّذِينَ <span class="b">كَفَرُوا۟</span> مِنْ أَهْلِ <span class="g">ٱلْكِتَـٰبِ مِن</span></p>
+</section>
+
+<!-- REFLECTIONS -->
+<section class="wrap">
+  <p class="label">Read Reflections:</p>
+  <div class="grid" id="reflections"></div>
+</section>
+
+<!-- ABOUT -->
+<section class="wrap about" style="padding-top:72px">
+  <h2>Barakallahu Feekum.</h2>
+  <div class="copy">
+    <p>Fajar Siddiq is a Singaporean Serial Entrepreneur. He is currently pursuing his hifz of the Qur’an and recites according to the riwayah of Ḥafṣ ‘an ‘Āṣim. Through his work in Qur’an media, da‘wah and technology, he records and produces video content featuring Qur’an reciters and imams, helping share their recitations and messages with a wider audience.</p>
+    <p>He is the founder of Euphorya and its brands, including IlmProduction.com, RemoteMuslims.com and RamadanMakers.com, and is also an ambassador for RawiApp.xyz. His initiatives focus on connecting, supporting and inspiring the Muslim community through digital media, technology and creative initiatives.</p>
+    <p>May Allah keep him steadfast upon His Book, strengthen his heart in faith, grant him sincerity in every step, and make the Qur’an the light of his heart, the guide of his life and a source of benefit to others. May Allah grant him strength and patience to complete his hifz, accept his efforts in da‘wah and service to the Ummah, and make his work a lasting source of khayr and sadaqah jariyah.</p>
+    <p>Allahumma Aameen.</p>
+  </div>
+</section>
+
+<div class="studio ph" data-ph="Photo goes here: upload images/studio.png"><img src="images/studio.png" alt="Fajar Siddiq in his recording studio" loading="lazy" onload="this.parentNode.classList.add('ok')" onerror="this.style.display='none'"></div>
+<footer>© <span id="yr"></span> <a href="https://fajarsiddiq.com">Fajar Siddiq</a> · <a href="https://euphorya.co">Euphorya</a></footer>
+
+<script>
+/* =====================================================
+   EDIT THIS PART ONLY — paste your own links below.
+   ===================================================== */
+
+// SoundCloud: paste the normal track link from soundcloud.com between the quotes.
+const FEATURED = "";    // top player
+const LISTEN_MAIN = ""; // player under the big photo (left)
+const LISTEN_LIST = [   // the three players on the right
+  "",
+  "",
+  ""
+];
+
+// Reflections: "top" = small line under LEARN ABOUT, "title" = big title (<i>…</i> makes italic),
+// "caption" = grey line under the card, "link" = article address, "image" = optional photo path.
+const REFLECTIONS = [
+  { top:"Surah Al-Humazah", title:"The Heart <i>Behind the</i> Words",   caption:"Surah Al-Humazah: The Heart Behind the Words", link:"#", image:"" },
+  { top:"Surah Al-Fil",     title:"The Elephant Army &amp; Allah’s Protection", caption:"Surah Al-Fil: The Elephant Army and Allah’s Protection", link:"#", image:"" },
+  { top:"Surah Al-Ma’un",   title:"Putting Faith <i>into Action</i>",    caption:"Surah Al-Ma’un: Putting Faith into Action", link:"#", image:"" },
+  { top:"Surah Al-Kawthar", title:"Abundance <i>Beyond Loss</i>",        caption:"Surah Al-Kawthar: Abundance Beyond Loss", link:"#", image:"" },
+  { top:"",                 title:"7 Days 7 Verses",                      caption:"Seven Days, Seven Verses: Living the Message of Al-Fatihah", link:"#", image:"" },
+  { top:"Surah Al-Masad",   title:"A Warning <i>Against Pride</i>",      caption:"Surah Al-Masad: A Warning Against Pride", link:"#", image:"" },
+  { top:"Surah Al-Kafirun", title:"Sincere &amp; Steadfast",              caption:"Surah Al-Kafirun: Sincere and Steadfast", link:"#", image:"" },
+  { top:"Surah Al-Ikhlas",  title:"<i>The</i> Oneness of Allah",          caption:"Surah Al-Ikhlas: The Oneness of Allah", link:"#", image:"" }
+];
+
+/* ============ Nothing below needs editing ============ */
+function player(url, height){
+  const box = document.createElement("div");
+  box.className = "player";
+  if(!url){
+    box.innerHTML = '<div class="placeholder">SoundCloud track goes here.<br>Add its link in the script at the bottom of index.html.</div>';
+    return box;
+  }
+  const f = document.createElement("iframe");
+  f.src = "https://w.soundcloud.com/player/?color=%23111111&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=false&url=" + encodeURIComponent(url);
+  f.height = height; f.loading = "lazy"; f.allow = "autoplay"; f.title = "SoundCloud player";
+  box.appendChild(f);
+  return box;
+}
+document.getElementById("featured").appendChild(player(FEATURED,166));
+document.getElementById("listen-main").appendChild(player(LISTEN_MAIN,166));
+LISTEN_LIST.forEach(u => document.getElementById("listen-list").appendChild(player(u,166)));
+
+const shades = ["#7a4a2b","#6b4a2e","#2d3a33","#8a5a2a","#2f4a66","#7a2f1a","#1d2d3d","#1b1b22"];
+const grid = document.getElementById("reflections");
+REFLECTIONS.forEach((r,i) => {
+  const a = document.createElement("a");
+  a.className = "ref"; a.href = r.link;
+  const bg = r.image ? `url('${r.image}')` : "none";
+  const top = r.top ? `<small>LEARN ABOUT<b>${r.top}</b></small>` : "";
+  a.innerHTML = `<div class="art" style="background-color:${shades[i%shades.length]};background-image:${bg}">${top}<strong>${r.title}</strong></div><p>${r.caption}</p>`;
+  grid.appendChild(a);
+});
+document.getElementById("yr").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
