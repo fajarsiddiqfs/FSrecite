@@ -61,8 +61,8 @@ section.wrap{padding-top:clamp(40px,7vw,64px);padding-bottom:0}
 .listen{display:grid;gap:20px}
 .listen-right{display:grid;gap:14px;align-content:start}
 .igwrap{margin-bottom:12px}
-.igcrop{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:18px;background:var(--soft)}
-.igcrop iframe{position:absolute;left:0;top:-56px;width:100%;height:calc(100% + 400px);border:0}
+.igcrop{position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:18px;background:var(--soft)}
+.igcrop iframe{position:absolute;left:0;top:-56px;width:100%;height:calc(100% + 120px);border:0}
 .igpair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .igcrop.sm{border-radius:12px}
 .igcrop.sm iframe{top:-56px;left:0;transform-origin:0 0;max-width:none}
@@ -253,7 +253,7 @@ function fitSmall(){
   document.querySelectorAll(".igcrop.sm").forEach(b=>{
     const f=b.querySelector("iframe");
     f.style.width=W+"px";
-    f.style.height=(W+400)+"px";
+    f.style.height=(W*4/3+120)+"px";
     f.style.transform="scale("+(b.clientWidth/W)+")";
   });
 }
