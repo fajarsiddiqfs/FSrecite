@@ -75,7 +75,7 @@ section.wrap{padding-top:clamp(40px,7vw,64px);padding-bottom:0}
 /* REFLECTIONS — photo card + grey caption strip */
 .grid{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:560px){.grid{grid-template-columns:repeat(2,1fr);gap:12px}}
-@media(min-width:800px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:800px){.grid{grid-template-columns:repeat(3,1fr)}}
 .ref{text-decoration:none;border-radius:8px;overflow:hidden;background:var(--soft);display:flex;flex-direction:column;transition:transform .2s}
 .ref:hover{transform:translateY(-3px)}
 .art{aspect-ratio:1/.82;padding:12px;color:#fff;display:flex;flex-direction:column;justify-content:center;background-size:cover;background-position:center;position:relative}
@@ -85,6 +85,9 @@ section.wrap{padding-top:clamp(40px,7vw,64px);padding-bottom:0}
 .art small b{display:block;font-weight:400;font-size:.68rem}
 .art strong{font-family:Fraunces,serif;font-weight:400;font-size:clamp(1.25rem,5vw,1.75rem);line-height:1.05;letter-spacing:-.01em}
 .art i{font-style:italic}
+.art.plain{color:var(--fg)}
+.art.plain::after{display:none}
+.art.plain small{opacity:.7}
 .ref p{margin:0;padding:8px 10px 10px;font-size:.72rem;font-weight:500;line-height:1.35}
 
 /* IMAGE PLACEHOLDERS — shown until the real picture loads */
@@ -194,9 +197,7 @@ const REFLECTIONS = [
   { top:"Surah Al-Ma’un",   title:"Putting Faith <i>into Action</i>",    caption:"Surah Al-Ma’un: Putting Faith into Action", link:"https://quran.com/learning-plans", image:"" },
   { top:"Surah Al-Kawthar", title:"Abundance <i>Beyond Loss</i>",        caption:"Surah Al-Kawthar: Abundance Beyond Loss", link:"https://quran.com/learning-plans", image:"" },
   { top:"",                 title:"7 Days 7 Verses",                      caption:"Seven Days, Seven Verses: Living the Message of Al-Fatihah", link:"https://quran.com/learning-plans", image:"" },
-  { top:"Surah Al-Masad",   title:"A Warning <i>Against Pride</i>",      caption:"Surah Al-Masad: A Warning Against Pride", link:"https://quran.com/learning-plans", image:"" },
-  { top:"Surah Al-Kafirun", title:"Sincere &amp; Steadfast",              caption:"Surah Al-Kafirun: Sincere and Steadfast", link:"https://quran.com/learning-plans", image:"" },
-  { top:"Surah Al-Ikhlas",  title:"<i>The</i> Oneness of Allah",          caption:"Surah Al-Ikhlas: The Oneness of Allah", link:"https://quran.com/learning-plans", image:"" }
+  { top:"Surah Al-Masad",   title:"A Warning <i>Against Pride</i>",      caption:"Surah Al-Masad: A Warning Against Pride", link:"https://quran.com/learning-plans", image:"" }
 ];
 
 /* ============ Nothing below needs editing ============ */
@@ -215,14 +216,14 @@ function player(url, height){
 document.getElementById("featured").appendChild(player(FEATURED,166));
 LISTEN_LIST.forEach(u => document.getElementById("listen-list").appendChild(player(u,166)));
 
-const shades = ["#7a4a2b","#6b4a2e","#2d3a33","#8a5a2a","#2f4a66","#7a2f1a","#1d2d3d","#1b1b22"];
+const shades = ["#E8E1FA","#FBE3D6","#DCEFE3","#DCE9F7","#F7EFCB","#F8DDE5"]; // soft pastels
 const grid = document.getElementById("reflections");
 REFLECTIONS.forEach((r,i) => {
   const a = document.createElement("a");
   a.className = "ref"; a.href = r.link; a.target = "_blank"; a.rel = "noopener";
   const bg = r.image ? `url('${r.image}')` : "none";
   const top = r.top ? `<small>LEARN ABOUT<b>${r.top}</b></small>` : "";
-  a.innerHTML = `<div class="art" style="background-color:${shades[i%shades.length]};background-image:${bg}">${top}<strong>${r.title}</strong></div><p>${r.caption}</p>`;
+  a.innerHTML = `<div class="art${r.image?'':' plain'}" style="background-color:${shades[i%shades.length]};background-image:${bg}">${top}<strong>${r.title}</strong></div><p>${r.caption}</p>`;
   grid.appendChild(a);
 });
 document.getElementById("yr").textContent = new Date().getFullYear();
