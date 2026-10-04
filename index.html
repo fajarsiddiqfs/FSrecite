@@ -57,18 +57,13 @@ section.wrap{padding-top:clamp(40px,7vw,64px);padding-bottom:0}
 .seen ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 44px;font-size:1.25rem}
 .seen a{text-decoration:none}.seen a:hover{text-decoration:underline}
 
-/* LISTEN NOW — big photo + player left, three players right */
-.listen{display:grid;gap:20px}
+/* LISTEN NOW */
+.listen{display:grid;gap:20px;max-width:760px;margin:0 auto}
 .listen-right{display:grid;gap:14px;align-content:start}
-.igwrap{margin-bottom:12px}
-.igcrop{position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:18px;background:var(--soft)}
-.igcrop iframe{position:absolute;left:0;top:-56px;width:100%;height:calc(100% + 120px);border:0}
-.igpair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.igcrop.sm{border-radius:12px}
-.igcrop.sm iframe{top:-56px;left:0;transform-origin:0 0;max-width:none}
 .bigphoto{aspect-ratio:1/1;border-radius:18px;overflow:hidden;background:var(--soft);margin-bottom:12px}
 .bigphoto img{width:100%;height:100%;object-fit:cover}
-@media(min-width:800px){.listen{grid-template-columns:1fr 1fr;gap:28px}}
+
+
 
 /* MEMORISING NOW */
 .mem{text-align:center}
@@ -146,20 +141,6 @@ footer{padding:16px 0 28px;text-align:center;color:var(--muted);font-size:.8rem}
 <section class="wrap">
   <h2 class="big">Listen Now<small>via SoundCloud</small></h2>
   <div class="listen">
-    <div>
-      <div class="igwrap">
-        <div class="igcrop"><iframe src="https://www.instagram.com/p/Bj9e2f6lXhJ/embed/" title="Instagram video" allow="autoplay; fullscreen; encrypted-media" allowfullscreen loading="lazy" scrolling="no" allowtransparency="true" frameborder="0"></iframe></div>
-      </div>
-      <div class="igpair">
-        <div class="igcrop sm"><iframe src="https://www.instagram.com/p/Bj9-RV8F2HE/embed/" title="Instagram post" allow="autoplay; fullscreen; encrypted-media" allowfullscreen loading="lazy" scrolling="no" frameborder="0"></iframe></div>
-        <div class="igcrop sm"><iframe src="https://www.instagram.com/p/B4UZNV1B3Q0/embed/" title="Instagram post" allow="autoplay; fullscreen; encrypted-media" allowfullscreen loading="lazy" scrolling="no" frameborder="0"></iframe></div>
-      </div>
-      <div class="igpair">
-        <div class="igcrop sm"><iframe src="https://www.instagram.com/p/Db4G1kqTvgs/embed/" title="Instagram video" allow="autoplay; fullscreen; encrypted-media" allowfullscreen loading="lazy" scrolling="no" frameborder="0"></iframe></div>
-        <div class="igcrop sm"><iframe src="https://www.instagram.com/p/Db5miPVJ_0F/embed/" title="Instagram video" allow="autoplay; fullscreen; encrypted-media" allowfullscreen loading="lazy" scrolling="no" frameborder="0"></iframe></div>
-      </div>
-      <div id="listen-main"></div>
-    </div>
     <div class="listen-right" id="listen-list"></div>
   </div>
 </section>
@@ -199,8 +180,7 @@ footer{padding:16px 0 28px;text-align:center;color:var(--muted);font-size:.8rem}
 
 // SoundCloud: paste the normal track link from soundcloud.com between the quotes.
 const FEATURED = "https://soundcloud.com/fajarsiddiq/surah-an-nur-35-36-fajar-siddiq";    // top player
-const LISTEN_MAIN = ""; // player under the big photo (left)
-const LISTEN_LIST = [   // the three players on the right
+const LISTEN_LIST = [   // the three players
   "https://soundcloud.com/fajarsiddiq/surah-az-zumar-39-verse-53-fajar-siddiq",
   "https://soundcloud.com/fajarsiddiq/surah-al-qiyamah-75-fajar-siddiq",
   "https://soundcloud.com/fajarsiddiq/surah-al-hajj-36-39-fajar-siddiq-test"
@@ -233,7 +213,6 @@ function player(url, height){
   return box;
 }
 document.getElementById("featured").appendChild(player(FEATURED,166));
-document.getElementById("listen-main").appendChild(player(LISTEN_MAIN,166));
 LISTEN_LIST.forEach(u => document.getElementById("listen-list").appendChild(player(u,166)));
 
 const shades = ["#7a4a2b","#6b4a2e","#2d3a33","#8a5a2a","#2f4a66","#7a2f1a","#1d2d3d","#1b1b22"];
@@ -247,17 +226,6 @@ REFLECTIONS.forEach((r,i) => {
   grid.appendChild(a);
 });
 document.getElementById("yr").textContent = new Date().getFullYear();
-function fitSmall(){
-  const top=document.querySelector(".igwrap .igcrop");
-  const W=top ? top.clientWidth : 486;
-  document.querySelectorAll(".igcrop.sm").forEach(b=>{
-    const f=b.querySelector("iframe");
-    f.style.width=W+"px";
-    f.style.height=(W*4/3+120)+"px";
-    f.style.transform="scale("+(b.clientWidth/W)+")";
-  });
-}
-fitSmall(); window.addEventListener("resize",fitSmall); window.addEventListener("load",fitSmall);
 (function(){
   const d = new Date(), n = d.getDate();
   const suf = (n%100>=11 && n%100<=13) ? "th" : ({1:"st",2:"nd",3:"rd"}[n%10] || "th");
