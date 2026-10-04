@@ -173,7 +173,7 @@ footer{padding:16px 0 28px;text-align:center;color:var(--muted);font-size:.8rem}
 
 <!-- WATCH NOW -->
 <section class="wrap">
-  <h2 class="big">Watch Now<small>via TikTok</small></h2>
+  <h2 class="big">Watch Now<small>via Short-Form Videos</small></h2>
   <div class="watch">
     <div class="wtrack" id="wtrack"></div>
   </div>
@@ -181,7 +181,7 @@ footer{padding:16px 0 28px;text-align:center;color:var(--muted);font-size:.8rem}
 
 <!-- MEMORISING NOW -->
 <section class="wrap mem">
-  <h2 class="big">Currently Memorising<small>Surah Al-Hasyr</small></h2>
+  <h2 class="big">Currently Memorising<small>Surah Al-Hasyr (59)</small></h2>
   <p class="bismillah" lang="ar" dir="rtl">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
   <p class="ayah" lang="ar" dir="rtl">سَبَّحَ لِلَّهِ مَا فِى ٱلسَّمَـٰوَٰتِ وَمَا فِى <span class="b">ٱلْأَرْضِ</span> ۖ وَهُوَ ٱلْعَزِيزُ ٱلْحَكِيمُ ﴿١﴾</p>
 </section>
@@ -278,11 +278,19 @@ REFLECTIONS.forEach((r,i) => {
   modal.innerHTML='<button aria-label="Close">&times;</button>';
   document.body.appendChild(modal);
   function closeV(){modal.classList.remove("open");const v=modal.querySelector("video");if(v){v.pause();v.remove();}}
+  const warm={};
+  function warmUp(src){
+    if(warm[src])return warm[src];
+    const v=document.createElement("video");
+    v.preload="auto"; v.playsInline=true; v.controls=true; v.src=src; v.load();
+    return warm[src]=v;
+  }
   function openV(src,poster){
     closeV();
-    const v=document.createElement("video");
-    v.src=src; v.controls=true; v.autoplay=true; v.playsInline=true; if(poster)v.poster=poster;
+    const v=warmUp(src);
+    if(poster)v.poster=poster;
     modal.appendChild(v); modal.classList.add("open");
+    v.currentTime=0; v.play();
   }
   modal.addEventListener("click",e=>{if(e.target!==modal.querySelector("video"))closeV();});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeV();});
@@ -296,8 +304,9 @@ REFLECTIONS.forEach((r,i) => {
     if(v.video && !v.thumb) media='<video class="wv" src="'+v.video+'#t=0.1" muted playsinline preload="metadata"></video>';
     if(v.video){
       a.href="#"; a.addEventListener("click",e=>{e.preventDefault();openV(v.video,v.thumb);});
+      ["pointerenter","touchstart"].forEach(ev=>a.addEventListener(ev,()=>warmUp(v.video),{passive:true}));
     } else if(v.url){a.href=v.url;a.target="_blank";a.rel="noopener";}
-    a.innerHTML=media+icon+"<b>"+v.title+"</b>";
+    a.innerHTML=media; a.setAttribute("aria-label",v.title);
     tr.appendChild(a);
   }));
 })();
