@@ -68,28 +68,72 @@ section.wrap{padding-top:clamp(40px,7vw,64px);padding-bottom:0}
 
 
 /* WATCH NOW */
-.watch{position:relative;overflow:hidden;margin:0 -24px;padding:4px 0}
-.watch::before,.watch::after{content:"";position:absolute;top:0;bottom:0;width:clamp(48px,12vw,140px);z-index:2;pointer-events:none}
-.watch::before{left:0;background:linear-gradient(to right,#fff,rgba(255,255,255,0))}
-.watch::after{right:0;background:linear-gradient(to left,#fff,rgba(255,255,255,0))}
-.wtrack{display:flex;gap:14px;width:max-content;animation:wscroll 70s linear infinite}
-.watch:hover .wtrack{animation-play-state:paused}
-@keyframes wscroll{to{transform:translateX(calc(-50% - 7px))}}
-@media(prefers-reduced-motion:reduce){.wtrack{animation:none}.watch{overflow-x:auto}}
+.wfade{position:relative;margin:0 -24px}
+.wfade::before,.wfade::after{content:"";position:absolute;top:0;bottom:0;width:clamp(48px,12vw,140px);z-index:2;pointer-events:none}
+.wfade::before{left:0;background:linear-gradient(to right,#fff,rgba(255,255,255,0))}
+.wfade::after{right:0;background:linear-gradient(to left,#fff,rgba(255,255,255,0))}
+.watch{overflow-x:auto;overflow-y:hidden;padding:4px 0;scrollbar-width:none;overscroll-behavior-x:contain}
+.watch::-webkit-scrollbar{display:none}
+.wtrack{display:flex;gap:14px;width:max-content}
 .wcard{position:relative;flex:0 0 min(62vw,225px);aspect-ratio:2/3;border-radius:18px;overflow:hidden;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;background-size:cover;background-position:center;transition:transform .2s}
 .wcard:hover{transform:translateY(-3px)}
 .wcard .tt{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:8px;background:rgba(0,0,0,.55);display:grid;place-items:center}
 .wcard .tt svg{width:15px;height:15px;fill:#fff}
 .wcard b{position:relative;z-index:1;max-width:84%;text-align:center;font-weight:700;font-size:.95rem;line-height:1.2;color:#fff;background:#000;padding:10px 14px;border-radius:3px;box-shadow:-3px -3px 0 #25f4ee,3px 3px 0 #fe2c55}
 .wcard.plain{color:var(--fg)}
-.wcard .wp{position:absolute;z-index:1;left:50%;top:50%;width:56px;height:56px;transform:translate(-50%,-50%);display:grid;place-items:center;border-radius:50%;background:rgba(0,0,0,.35);pointer-events:none;transition:transform .2s,background .2s}
-.wcard .wp svg{width:26px;height:26px;fill:#fff;margin-left:4px;filter:drop-shadow(0 1px 4px rgba(0,0,0,.4))}
-.wcard:hover .wp{background:rgba(0,0,0,.5);transform:translate(-50%,-50%) scale(1.08)}
-.wcard .wv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.wcard .wp,.lcard .wp{position:absolute;z-index:1;left:50%;top:50%;width:56px;height:56px;transform:translate(-50%,-50%);display:grid;place-items:center;border-radius:50%;background:rgba(0,0,0,.35);pointer-events:none;transition:transform .2s,background .2s}
+.wcard .wp svg,.lcard .wp svg{width:26px;height:26px;fill:#fff;margin-left:4px;filter:drop-shadow(0 1px 4px rgba(0,0,0,.4))}
+.wcard:hover .wp,.lcard:hover .wp{background:rgba(0,0,0,.5);transform:translate(-50%,-50%) scale(1.08)}
+.lcard{position:relative;flex:0 0 min(78vw,340px);aspect-ratio:16/9;border-radius:14px;overflow:hidden;display:block;background-size:cover;background-position:center;transition:transform .2s}
+.lcard:hover{transform:translateY(-3px)}
+.wcard .wv,.lcard .wv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
 .wmodal{position:fixed;inset:0;z-index:999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.85);padding:16px}
 .wmodal.open{display:flex}
 .wmodal video{max-width:100%;max-height:88vh;border-radius:14px;background:#000}
 .wmodal button{position:absolute;top:14px;right:14px;width:42px;height:42px;border:0;border-radius:50%;background:#fff;color:#000;font-size:24px;cursor:pointer}
+
+/* SURAH CHECKLIST */
+.sgrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(min-width:560px){.sgrid{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:800px){.sgrid{grid-template-columns:repeat(6,1fr)}}
+.sgrid li{display:flex;align-items:center;gap:6px;padding:9px 8px 9px 10px;border-radius:10px;background:var(--soft);font-size:.74rem;line-height:1.2;min-height:42px}
+.sgrid .n{color:var(--muted);font-size:.66rem;min-width:1.5em;font-variant-numeric:tabular-nums}
+.sgrid .nm{flex:1;min-width:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sgrid .ck{flex:none;width:16px;height:16px;border-radius:50%;border:1.5px solid #c9c9d1;display:grid;place-items:center}
+.sgrid .ck svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.sgrid li.done{background:#000;color:#fff}
+.sgrid li.done .n{color:#aaa}
+.sgrid li.done .ck{background:#fff;border-color:#fff}
+.sgrid li.done .ck svg{stroke:#000;opacity:1}
+.sgrid li.some{background:#e7e7ec}
+.sgrid li.some .ck{border-color:#000;background:linear-gradient(90deg,#000 50%,transparent 50%)}
+.sgrid li.now{box-shadow:inset 0 0 0 1.5px #000;background:#fff}
+.sgrid li.now .ck{border-color:#000;position:relative}
+.sgrid li.now .ck::after{content:"";width:6px;height:6px;border-radius:50%;background:#000;animation:blink 1.4s ease-in-out infinite}
+.slegend{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin:0 0 20px;font-size:.78rem;color:var(--muted)}
+.slegend span{display:inline-flex;align-items:center;gap:6px}
+.slegend i{width:12px;height:12px;border-radius:50%;display:inline-block;background:var(--soft);border:1.5px solid #c9c9d1}
+.slegend i.d{background:#000;border-color:#000}
+.slegend i.c{background:#fff;border-color:#000}
+.slegend i.s{border-color:#000;background:linear-gradient(90deg,#000 50%,transparent 50%)}
+
+/* HIFZ BAR */
+.hifz{padding-top:8px;padding-bottom:40px}
+.hifz-top{display:flex;justify-content:space-between;align-items:flex-end;gap:8px 24px;flex-wrap:wrap;margin-bottom:18px}
+.hifz h2{margin:0;font-size:clamp(1.5rem,5vw,2.1rem);font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.hifz h2 small{display:block;font-size:.8125rem;font-weight:400;letter-spacing:0;line-height:1.4;color:var(--muted);margin-top:8px}
+.hifz-stat{font-size:clamp(1.5rem,5vw,2.1rem);font-weight:500;letter-spacing:-.02em;color:#b3b3b8;line-height:1.1;white-space:nowrap}
+.hifz-stat b{font-weight:500;color:#000}
+.hifz-bar{height:14px;border-radius:999px;background:#ececec;overflow:hidden}
+.hifz-fill{height:100%;width:0;border-radius:999px;background:#000;transition:width 1.4s cubic-bezier(.2,.7,.2,1)}
+.hifz-mini{margin:16px auto 14px;max-width:380px}
+.hifz-mini-top{display:flex;justify-content:space-between;gap:12px;font-size:.85rem;margin-bottom:8px}
+.hifz-mini-top b{font-weight:600}
+.hifz-mini-top span{color:var(--muted)}
+.hifz-mini .hifz-bar{height:6px}
+.hifz-mini .hifz-foot{margin-top:7px;font-size:.78rem}
+@media(min-width:800px){.hifz-mini{margin:16px 0 14px}}
+.hifz-foot{display:flex;justify-content:space-between;gap:12px;margin-top:12px;font-size:.9rem;color:var(--muted)}
 
 /* MEMORISING NOW */
 .mem{text-align:center}
@@ -97,24 +141,6 @@ section.wrap{padding-top:clamp(40px,7vw,64px);padding-bottom:0}
 .mem .trans{color:var(--muted);font-size:.85rem;margin:0 0 30px}
 .ayah{font-family:"Amiri Quran",serif;font-size:clamp(1.8rem,6.6vw,3.1rem);line-height:2.2;margin:0 auto;max-width:900px}
 .ayah .b{color:#2b45d6}.ayah .r{color:#d62b2b}.ayah .g{color:#1a9a2e}
-
-/* REFLECTIONS — photo card + grey caption strip */
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:560px){.grid{grid-template-columns:repeat(2,1fr);gap:12px}}
-@media(min-width:800px){.grid{grid-template-columns:repeat(3,1fr)}}
-.ref{text-decoration:none;border-radius:8px;overflow:hidden;background:var(--soft);display:flex;flex-direction:column;transition:transform .2s}
-.ref:hover{transform:translateY(-3px)}
-.art{aspect-ratio:1/.82;padding:12px;color:#fff;display:flex;flex-direction:column;justify-content:center;background-size:cover;background-position:center;position:relative}
-.art::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.28)}
-.art>*{position:relative;z-index:1}
-.art small{font-size:.6rem;line-height:1.35;opacity:.9;margin-bottom:6px}
-.art small b{display:block;font-weight:400;font-size:.68rem}
-.art strong{font-family:Fraunces,serif;font-weight:400;font-size:clamp(1.25rem,5vw,1.75rem);line-height:1.05;letter-spacing:-.01em}
-.art i{font-style:italic}
-.art.plain{color:var(--fg)}
-.art.plain::after{display:none}
-.art.plain small{opacity:.7}
-.ref p{margin:0;padding:8px 10px 10px;font-size:.72rem;font-weight:500;line-height:1.35}
 
 /* IMAGE PLACEHOLDERS — shown until the real picture loads */
 .ph{position:relative;background:var(--soft)}
@@ -131,6 +157,7 @@ section.wrap{padding-top:clamp(40px,7vw,64px);padding-bottom:0}
 .about .copy{max-width:700px;margin:0 auto;text-align:left}
 @media(max-width:799px){.about .copy{text-align:center}}
 .about p{margin:0 0 1.5em}
+.about blockquote{margin:0 0 1.5em;padding:2px 0 2px 18px;border-left:3px solid #000;font-style:italic}
 
 /* STUDIO — full-width, bleeds to the bottom */
 .studio{margin-top:24px;background:#fff}
@@ -146,7 +173,12 @@ footer{padding:16px 0 28px;text-align:center;color:var(--muted);font-size:.8rem}
   <div class="wrap">
     <div class="hero-text">
       <h1>Fajar Siddiq</h1>
-      <p class="tag">Qur’an by Heart. A lifelong journey of Recitation, Memorisation &amp; Reflection.</p>
+      <p class="tag">Quran by Heart. A lifelong journey of Recitation, Memorisation &amp; Reflection.</p>
+      <div class="hifz-mini">
+        <div class="hifz-mini-top"><b>Hifz Progress</b><span id="hsTxt"></span></div>
+        <div class="hifz-bar" role="progressbar" aria-label="Hifz progress" aria-valuemin="0" aria-valuemax="100" id="hsBar"><div class="hifz-fill" id="hsFill"></div></div>
+        <div class="hifz-foot"><span id="hsStart"></span><span id="hsLeft"></span></div>
+      </div>
       <p class="updated"><span class="dot" aria-hidden="true"></span>Last Updated: <span id="today">4th October 2026</span></p>
       <div class="featured" id="featured"></div>
     </div>
@@ -166,6 +198,16 @@ footer{padding:16px 0 28px;text-align:center;color:var(--muted);font-size:.8rem}
   </ul>
 </section>
 
+<!-- WATCH NOW (long-form) -->
+<section class="wrap">
+  <h2 class="big">Watch Now<small>via Long-Form Videos</small></h2>
+  <div class="wfade" id="lfade">
+    <div class="watch" id="lwatch">
+      <div class="wtrack ltrack" id="lgrid"></div>
+    </div>
+  </div>
+</section>
+
 <!-- LISTEN NOW -->
 <section class="wrap">
   <h2 class="big">Listen Now<small>via SoundCloud</small></h2>
@@ -176,9 +218,11 @@ footer{padding:16px 0 28px;text-align:center;color:var(--muted);font-size:.8rem}
 
 <!-- WATCH NOW -->
 <section class="wrap">
-  <h2 class="big">Watch Now<small>via Short-Form Videos</small></h2>
-  <div class="watch">
-    <div class="wtrack" id="wtrack"></div>
+  <h2 class="big">Video Snippets<small>via Short-Form Videos</small></h2>
+  <div class="wfade">
+    <div class="watch" id="watch">
+      <div class="wtrack" id="wtrack"></div>
+    </div>
   </div>
 </section>
 
@@ -189,18 +233,38 @@ footer{padding:16px 0 28px;text-align:center;color:var(--muted);font-size:.8rem}
   <p class="ayah" lang="ar" dir="rtl">سَبَّحَ لِلَّهِ مَا فِى ٱلسَّمَـٰوَٰتِ وَمَا فِى <span class="b">ٱلْأَرْضِ</span> ۖ وَهُوَ ٱلْعَزِيزُ ٱلْحَكِيمُ ﴿١﴾</p>
 </section>
 
-<!-- REFLECTIONS -->
-<section class="wrap">
-  <h2 class="big">Quran Reflections<small>via Quran.com</small></h2>
-  <div class="grid" id="reflections"></div>
+<!-- SURAH CHECKLIST -->
+<section class="wrap" id="surahs">
+  <h2 class="big">Surah Checklist<small id="surahCount"></small></h2>
+  <div class="slegend"><span><i class="d"></i>Memorised Full Surah</span><span><i class="s"></i>Memorised Some Ayah</span><span><i class="c"></i>Currently memorising</span><span><i></i>Not yet</span></div>
+  <ul class="sgrid" id="sgrid"></ul>
 </section>
+
+<!-- HIFZ BAR -->
+<section class="wrap hifz">
+  <div class="hifz-top">
+    <h2>Quran by Heart<small>A lifelong journey of Recitation, Memorisation &amp; Reflection.</small></h2>
+    <div class="hifz-stat"><b id="hifzPct"></b> / 100%</div>
+  </div>
+  <div class="hifz-bar" role="progressbar" aria-label="Hifz progress" aria-valuemin="0" aria-valuemax="100" id="hifzBar">
+    <div class="hifz-fill" id="hifzFill"></div>
+  </div>
+  <div class="hifz-foot"><span id="hifzStart"></span><span id="hifzLeft"></span></div>
+</section>
+
 
 <!-- ABOUT -->
 <section class="wrap about" style="padding-top:72px">
   <h2>Barakallahu Feekum.</h2>
   <div class="copy">
-    <p>Fajar Siddiq is a Singaporean Serial Entrepreneur. He is currently pursuing his hifz of the Qur’an and recites according to the riwayah of Ḥafṣ ‘an ‘Āṣim. Through his work in Qur’an media, da‘wah and technology, he records and produces video content featuring Qur’an reciters and imams, helping share their recitations and messages with a wider audience.</p>
-    <p>He is the founder of <a href="https://euphorya.co" target="_blank" rel="noopener">Euphorya</a> and its brands, including <a href="https://IlmProduction.com" target="_blank" rel="noopener">IlmProduction.com</a>, <a href="https://RemoteMuslims.com" target="_blank" rel="noopener">RemoteMuslims.com</a> and <a href="https://RamadanMakers.com" target="_blank" rel="noopener">RamadanMakers.com</a>, and is also an ambassador for <a href="https://rawiapp.xyz/" target="_blank" rel="noopener">Rawi App</a>. His initiatives focus on connecting, supporting and inspiring the Muslim community through digital media, technology and creative initiatives.</p>
+    <p>Fajar Siddiq is a Singaporean Serial Entrepreneur. Born in the year 1986, currently based &amp; living in Malaysia. He is currently pursuing his hifz of the Qur’an and recites according to the riwayah of Ḥafṣ ‘an ‘Āṣim. Through his work in Qur’an media, da‘wah and technology, he records and produces video content featuring Qur’an reciters and imams, helping share their recitations and messages with a wider audience.</p>
+    <p>His connection with the Qur’an began through his parents. His mother, who worked at the masjid, inspired in him a love for the masjid and the importance of serving the Muslim community. His father introduced him to <a href="https://quranexplorer.com" target="_blank" rel="noopener">QuranExplorer.com</a>, his first experience of the Qur’an through a digital platform on desktop. Even after his father passed away, Fajar continued using it as a personal connection to the Qur’an and a lasting reminder of him.</p>
+    <p>Fajar had already founded Euphorya in 2005, building his career as a self-taught entrepreneur, designer, developer and digital nomad. Following the passing of his mother, father and elder brother in 2012 and 2013, he embarked on an ‘Umrah that became a profound turning point in his life. During the journey, he had the opportunity to meet the Ex Grand Mufti of Makkah. After introducing himself and sharing what he did for a living, he was asked a simple yet profound question: “What have you done for Islam?”</p>
+    <p>That question stayed with him. From that point, he began looking at the skills he had spent years developing not simply as a profession, but as an amanah that could also be used in service of Islam and the Ummah.</p>
+    <p>He also had the chance to meet and record a recitation video with one of the Imams of Masjidil Haram, who shared:</p>
+    <blockquote>Just as we clean our homes when dust gathers, we need to clean our hearts when life, distractions and sins leave their traces. The Qur’an is one of the ways Allah brings light, remembrance and healing back into the heart.</blockquote>
+    <p><a href="https://www.youtube.com/watch?v=-hqh6jm5SX0" target="_blank" rel="noopener">Watch Recitation Video: Sheikh Prof. Dr. Hassan Bukhari - Surah Ash-Shuraa (42:51–53)</a></p>
+    <p>As the founder of <a href="https://euphorya.co" target="_blank" rel="noopener">Euphorya</a>, he later began giving back to the community and building brands, including <a href="https://youtube.com/ilmproductionsg" target="_blank" rel="noopener">IlmProduction.com</a>, <a href="https://remotemuslims.com/" target="_blank" rel="noopener">RemoteMuslims.com</a> and <a href="https://ramadanmakers.com/" target="_blank" rel="noopener">RamadanMakers.com</a>, and is also an ambassador for <a href="https://www.instagram.com/reels/Db5miPVJ_0F/" target="_blank" rel="noopener">Rawi App</a>. His initiatives focus on connecting, supporting and inspiring the Muslim community through digital media, technology and creative initiatives.</p>
     <p>May Allah keep him steadfast upon His Book, strengthen his heart in faith, grant him sincerity in every step, and make the Qur’an the light of his heart, the guide of his life and a source of benefit to others. May Allah grant him strength and patience to complete his hifz, accept his efforts in da‘wah and service to the Ummah, and make his work a lasting source of khayr and sadaqah jariyah.</p>
     <p>Allahumma Aameen.</p>
     <p><strong>Fajar Siddiq Recites</strong><br><a href="https://recite.fajarsiddiq.com">recite.fajarsiddiq.com</a></p>
@@ -223,7 +287,14 @@ const LISTEN_LIST = [   // the three players
   "https://soundcloud.com/fajarsiddiq/surah-al-hajj-36-39-fajar-siddiq-test"
 ];
 
-// Watch Now: "title" = black label, "video" = path to your mp4 (e.g. "videos/roof-top-tent.mp4"),
+// Watch Now (long videos): "video" = R2 link to your mp4, "thumb" = optional cover image path.
+const LONG = [
+  { title:"Surah Al-Hajj (36–44)", video:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Surah%20Al-Hajj%20%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AD%D8%AC_%20(Verse%2036-44)%20-%20Fajar%20Siddiq%20(Practice).mp4", thumb:"" },
+  { title:"Surah An-Nur (35–36)", video:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Surah%20An-Nur%20%D8%B3%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D9%88%D8%B1_%20(35-36)%20-%20Fajar%20Siddiq.mp4", thumb:"" },
+  { title:"Invitation", video:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/invitation.mp4", thumb:"" }
+];
+
+// Video Snippets: "title" = black label, "video" = path to your mp4 (e.g. "videos/roof-top-tent.mp4"),
 // "thumb" = optional cover image, "url" = optional TikTok link (used only if no video is set).
 const WATCH = [
   { title:"Keyfa Quran Space",  video:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/1.mp4", thumb:"", url:"" },
@@ -232,19 +303,19 @@ const WATCH = [
   { title:"Digital Nomad",      video:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/4.MOV", thumb:"", url:"" },
   { title:"Derbar Raja Coffee", video:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/5.mov", thumb:"", url:"" },
   { title:"Video 6",            video:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/6.mov", thumb:"", url:"" },
-  { title:"Video 7",            video:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/7.mov", thumb:"", url:"" }
+  { title:"Video 7",            video:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/7.mov", thumb:"", url:"" },
+  { title:"Surah Qaf (50:16)", video:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Surah%20Qaf%2C%20verse%2016%20%23quran%20%23surah%20%23qaf.mp4", thumb:"", url:"" },
+  { title:"The Qur’an with English meanings", video:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/%E2%9C%A8%20The%20Qur%27an%2C%20Arabic%20text%20with%20english%20meanings%20by%20%40NoorInternationalNet.mp4", thumb:"", url:"" }
 ];
 
-// Reflections: "top" = small line under LEARN ABOUT, "title" = big title (<i>…</i> makes italic),
-// "caption" = grey line under the card, "link" = article address, "image" = optional photo path.
-const REFLECTIONS = [
-  { top:"Surah Al-Humazah", title:"The Heart <i>Behind the</i> Words",   caption:"Surah Al-Humazah: The Heart Behind the Words", link:"https://quran.com/learning-plans", image:"" },
-  { top:"Surah Al-Fil",     title:"The Elephant Army &amp; Allah’s Protection", caption:"Surah Al-Fil: The Elephant Army and Allah’s Protection", link:"https://quran.com/learning-plans", image:"" },
-  { top:"Surah Al-Ma’un",   title:"Putting Faith <i>into Action</i>",    caption:"Surah Al-Ma’un: Putting Faith into Action", link:"https://quran.com/learning-plans", image:"" },
-  { top:"Surah Al-Kawthar", title:"Abundance <i>Beyond Loss</i>",        caption:"Surah Al-Kawthar: Abundance Beyond Loss", link:"https://quran.com/learning-plans", image:"" },
-  { top:"",                 title:"7 Days 7 Verses",                      caption:"Seven Days, Seven Verses: Living the Message of Al-Fatihah", link:"https://quran.com/learning-plans", image:"" },
-  { top:"Surah Al-Masad",   title:"A Warning <i>Against Pride</i>",      caption:"Surah Al-Masad: A Warning Against Pride", link:"https://quran.com/learning-plans", image:"" }
-];
+// Surah checklist: list the surah numbers you have memorised, e.g. [1, 93, 112, 113, 114]. "now" = the one you are memorising.
+const SURAH_DONE = [14, 23, 67, 75, 87, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114];
+// Some ayah only: surah number -> the ayah you know, e.g. { 18: "1-10", 2: "255-257" }. Leave {} if none yet.
+const SURAH_SOME = {};
+const SURAH_NOW = 59;
+
+// Hifz progress: percent done (0-100) and the year you started.
+const HIFZ = { percent: 6, started: 2012 };
 
 /* ============ Nothing below needs editing ============ */
 function player(url, height){
@@ -262,16 +333,6 @@ function player(url, height){
 document.getElementById("featured").appendChild(player(FEATURED,166));
 LISTEN_LIST.forEach(u => document.getElementById("listen-list").appendChild(player(u,166)));
 
-const shades = ["#E8E1FA","#FBE3D6","#DCEFE3","#DCE9F7","#F7EFCB","#F8DDE5"]; // soft pastels
-const grid = document.getElementById("reflections");
-REFLECTIONS.forEach((r,i) => {
-  const a = document.createElement("a");
-  a.className = "ref"; a.href = r.link; a.target = "_blank"; a.rel = "noopener";
-  const bg = r.image ? `url('${r.image}')` : "none";
-  const top = r.top ? `<small>LEARN ABOUT<b>${r.top}</b></small>` : "";
-  a.innerHTML = `<div class="art${r.image?'':' plain'}" style="background-color:${shades[i%shades.length]};background-image:${bg}">${top}<strong>${r.title}</strong></div><p>${r.caption}</p>`;
-  grid.appendChild(a);
-});
 (function(){
   const tr=document.getElementById("wtrack");
   const ph=["#E8E1FA","#FBE3D6","#DCEFE3","#DCE9F7","#F7EFCB","#F8DDE5"];
@@ -297,9 +358,9 @@ REFLECTIONS.forEach((r,i) => {
   }
   modal.addEventListener("click",e=>{if(e.target!==modal.querySelector("video"))closeV();});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeV();});
-  [0,1].forEach(copy=>WATCH.forEach((v,i)=>{
+  [0,1,2].forEach(copy=>WATCH.forEach((v,i)=>{
     const a=document.createElement("a");
-    if(copy){a.setAttribute("aria-hidden","true");a.tabIndex=-1;}
+    if(copy!==1){a.setAttribute("aria-hidden","true");a.tabIndex=-1;}
     a.className="wcard"+((v.thumb||v.video)?"":" plain");
     a.style.backgroundColor=ph[i%ph.length];
     if(v.thumb) a.style.backgroundImage="url('"+v.thumb+"')";
@@ -312,6 +373,87 @@ REFLECTIONS.forEach((r,i) => {
     a.innerHTML=media+'<span class="wp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17a1 1 0 0 0 1.5.86l14-8.5a1 1 0 0 0 0-1.72l-14-8.5A1 1 0 0 0 6 3.5z"/></svg></span>'; a.setAttribute("aria-label",v.title);
     tr.appendChild(a);
   }));
+  const lg=document.getElementById("lgrid"), lph=["#E8E1FA","#FBE3D6","#DCEFE3"];
+  const playSvg='<span class="wp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17a1 1 0 0 0 1.5.86l14-8.5a1 1 0 0 0 0-1.72l-14-8.5A1 1 0 0 0 6 3.5z"/></svg></span>';
+  [0,1,2].forEach(copy=>LONG.forEach((v,i)=>{
+    const a=document.createElement("a");
+    if(copy!==1){a.setAttribute("aria-hidden","true");a.tabIndex=-1;}
+    a.className="lcard"; a.href="#"; a.style.backgroundColor=lph[i%lph.length];
+    a.setAttribute("aria-label",v.title);
+    if(v.thumb) a.style.backgroundImage="url('"+v.thumb+"')";
+    let media="";
+    if(v.video && !v.thumb) media='<video class="wv" src="'+v.video+'#t=0.1" muted playsinline preload="metadata"></video>';
+    a.innerHTML=media+playSvg;
+    a.addEventListener("click",e=>{e.preventDefault();if(v.video)openV(v.video,v.thumb);});
+    if(v.video)["pointerenter","touchstart"].forEach(ev=>a.addEventListener(ev,()=>warmUp(v.video),{passive:true}));
+    lg.appendChild(a);
+  }));
+  // Auto-scroll to the left; two-finger swipe / trackpad / wheel scrolls by hand and pauses the motion.
+  function marquee(sc,track,n,speed){
+    let S=0,pos=0,last=0,hold=0,hovering=false;
+    const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function measure(){const k=track.children;if(k.length>n)S=k[n].offsetLeft-k[0].offsetLeft;}
+    function wrap(){ if(!S)return; if(sc.scrollLeft>=2*S)sc.scrollLeft-=S; else if(sc.scrollLeft<S)sc.scrollLeft+=S; pos=sc.scrollLeft; }
+    function init(){measure();sc.scrollLeft=S;pos=S;}
+    addEventListener("load",init); init();
+    addEventListener("resize",()=>{const r=S?(sc.scrollLeft-S)/S:0;measure();sc.scrollLeft=S+r*S;pos=sc.scrollLeft;});
+    const pause=ms=>{hold=performance.now()+ms;};
+    sc.addEventListener("wheel",()=>pause(2500),{passive:true});
+    sc.addEventListener("touchstart",()=>pause(3000),{passive:true});
+    sc.addEventListener("pointerdown",()=>pause(3000));
+    sc.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")hovering=true;});
+    sc.addEventListener("pointerleave",()=>{hovering=false;pause(800);});
+    sc.addEventListener("scroll",()=>{ if(Math.abs(sc.scrollLeft-pos)>1.5){pause(2500);} wrap(); },{passive:true});
+    function tick(t){
+      const dt=Math.min(64,t-(last||t));last=t;
+      if(!reduce&&!hovering&&t>hold&&S){pos+=speed*dt;sc.scrollLeft=pos;wrap();}
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  marquee(document.getElementById("watch"),tr,WATCH.length,0.035);
+  marquee(document.getElementById("lwatch"),lg,LONG.length,0.04);
+})();
+(function(){
+  const p=Math.max(0,Math.min(100,HIFZ.percent));
+  document.getElementById("hifzPct").textContent=p+"%";
+  document.getElementById("hifzStart").textContent="Started: "+HIFZ.started;
+  document.getElementById("hifzLeft").textContent=(100-p)+"% to go";
+  document.getElementById("hifzBar").setAttribute("aria-valuenow",p);
+  const f=document.getElementById("hifzFill");
+  const go=()=>{f.style.width=p+"%";};
+  if("IntersectionObserver" in window){
+    const io=new IntersectionObserver(es=>{if(es[0].isIntersecting){go();io.disconnect();}},{threshold:.4});
+    io.observe(f.parentElement);
+  } else go();
+})();
+(function(){
+  const p=Math.max(0,Math.min(100,HIFZ.percent));
+  document.getElementById("hsTxt").textContent=p+"% out of 100%";
+  document.getElementById("hsStart").textContent="Started: "+HIFZ.started;
+  document.getElementById("hsLeft").textContent=(100-p)+"% to go";
+  document.getElementById("hsBar").setAttribute("aria-valuenow",p);
+  const f=document.getElementById("hsFill");
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{f.style.width=p+"%";}));
+})();
+(function(){
+  const NAMES="Al-Fatihah,Al-Baqarah,Ali ‘Imran,An-Nisa,Al-Ma’idah,Al-An‘am,Al-A‘raf,Al-Anfal,At-Tawbah,Yunus,Hud,Yusuf,Ar-Ra‘d,Ibrahim,Al-Hijr,An-Nahl,Al-Isra,Al-Kahf,Maryam,Ta-Ha,Al-Anbiya,Al-Hajj,Al-Mu’minun,An-Nur,Al-Furqan,Ash-Shu‘ara,An-Naml,Al-Qasas,Al-‘Ankabut,Ar-Rum,Luqman,As-Sajdah,Al-Ahzab,Saba,Fatir,Ya-Sin,As-Saffat,Sad,Az-Zumar,Ghafir,Fussilat,Ash-Shura,Az-Zukhruf,Ad-Dukhan,Al-Jathiyah,Al-Ahqaf,Muhammad,Al-Fath,Al-Hujurat,Qaf,Adh-Dhariyat,At-Tur,An-Najm,Al-Qamar,Ar-Rahman,Al-Waqi‘ah,Al-Hadid,Al-Mujadila,Al-Hasyr,Al-Mumtahanah,As-Saff,Al-Jumu‘ah,Al-Munafiqun,At-Taghabun,At-Talaq,At-Tahrim,Al-Mulk,Al-Qalam,Al-Haqqah,Al-Ma‘arij,Nuh,Al-Jinn,Al-Muzzammil,Al-Muddaththir,Al-Qiyamah,Al-Insan,Al-Mursalat,An-Naba,An-Nazi‘at,‘Abasa,At-Takwir,Al-Infitar,Al-Mutaffifin,Al-Inshiqaq,Al-Buruj,At-Tariq,Al-A‘la,Al-Ghashiyah,Al-Fajr,Al-Balad,Ash-Shams,Al-Layl,Ad-Duha,Ash-Sharh,At-Tin,Al-‘Alaq,Al-Qadr,Al-Bayyinah,Az-Zalzalah,Al-‘Adiyat,Al-Qari‘ah,At-Takathur,Al-‘Asr,Al-Humazah,Al-Fil,Quraysh,Al-Ma‘un,Al-Kawthar,Al-Kafirun,An-Nasr,Al-Masad,Al-Ikhlas,Al-Falaq,An-Nas".split(",");
+  const demo=/[?&]demo\b/.test(location.search);
+  const done=new Set(demo?[1,36,55,67,78,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114]:SURAH_DONE);
+  const SOME=demo?{2:"1-5",18:"1-10",32:"1-9"}:SURAH_SOME;
+  const ul=document.getElementById("sgrid");
+  const tick='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.4l2.3 2.3 4.7-5"/></svg>';
+  NAMES.forEach((nm,i)=>{
+    const n=i+1, isDone=done.has(n), isNow=(n===SURAH_NOW&&!isDone), part=SOME[n], isSome=(!isDone&&!isNow&&part!==undefined);
+    const li=document.createElement("li");
+    li.className=isDone?"done":(isNow?"now":(isSome?"some":""));
+    if(isSome&&part)li.title="Ayah "+part;
+    li.setAttribute("aria-label","Surah "+n+" "+nm+(isDone?", memorised in full":(isNow?", currently memorising":(isSome?", some ayah memorised"+(part?" ("+part+")":""):""))));
+    li.innerHTML='<span class="n">'+n+'</span><span class="nm">'+nm+'</span><span class="ck">'+tick+'</span>';
+    ul.appendChild(li);
+  });
+  const some=Object.keys(SOME).filter(k=>!done.has(+k)).length;
+  document.getElementById("surahCount").textContent=done.size+" of 114 surahs memorised in full"+(some?" · "+some+" in part":"");
 })();
 document.getElementById("yr").textContent = new Date().getFullYear();
 (function(){
