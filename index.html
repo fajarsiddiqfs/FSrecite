@@ -293,6 +293,13 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
 .vbadge{display:inline-block;width:.5em;height:.5em;margin-left:.14em;vertical-align:.1em;transition:transform .2s}
 .vbadge:hover{transform:scale(1.12)}
 .vbadge svg{display:block;width:100%;height:100%}
+
+/* YOUTUBE MODAL */
+.ytmodal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.85);padding:16px}
+.ytmodal.open{display:flex}
+.ytmodal .ytbox{width:min(960px,100%);aspect-ratio:16/9;max-height:88vh;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.ytmodal iframe{display:block;width:100%;height:100%;border:0}
+.ytmodal .ytclose{position:absolute;top:14px;right:14px;width:42px;height:42px;border:0;border-radius:50%;background:#fff;color:#000;font-size:24px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -392,7 +399,7 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
     <p>That question stayed with him. From that point, he began looking at the skills he had spent years developing not simply as a profession, but as an amanah that could also be used in service of Islam and the Ummah.</p>
     <p>He also had the chance to meet and record a recitation video with one of the Imams of Masjidil Haram, who shared:</p>
     <blockquote>Just as we clean our homes when dust gathers, we need to clean our hearts when life, distractions and sins leave their traces. The Qur’an is one of the ways Allah brings light, remembrance and healing back into the heart.</blockquote>
-    <p><a href="https://www.youtube.com/watch?v=-hqh6jm5SX0" target="_blank" rel="noopener">Watch Recitation Video: Sheikh Prof. Dr. Hassan Bukhari - Surah Ash-Shuraa (42:51–53)</a></p>
+    <p><a href="https://www.youtube.com/watch?v=-hqh6jm5SX0" data-yt="-hqh6jm5SX0" target="_blank" rel="noopener">Watch Recitation Video: Sheikh Prof. Dr. Hassan Bukhari - Surah Ash-Shuraa (42:51–53)</a></p>
     <p>As the founder of <a href="https://euphorya.co" target="_blank" rel="noopener">Euphorya</a>, he later began giving back to the community and building brands, including <a href="https://youtube.com/ilmproductionsg" target="_blank" rel="noopener">IlmProduction.com</a>, <a href="https://remotemuslims.com/" target="_blank" rel="noopener">RemoteMuslims.com</a> and <a href="https://ramadanmakers.com/" target="_blank" rel="noopener">RamadanMakers.com</a>, and is also an ambassador for <a href="https://www.instagram.com/reels/Db5miPVJ_0F/" target="_blank" rel="noopener">Rawi App</a>. His initiatives focus on connecting, supporting and inspiring the Muslim community through digital media, technology and creative initiatives.</p>
     <p>May Allah keep him steadfast upon His Book, strengthen his heart in faith, grant him sincerity in every step, and make the Qur’an the light of his heart, the guide of his life and a source of benefit to others. May Allah grant him strength and patience to complete his hifz, accept his efforts in da‘wah and service to the Ummah, and make his work a lasting source of khayr and sadaqah jariyah.</p>
     <p>PS: The purpose of this website is to document my Qur’an journey, build a lasting relationship with the Quran, stay productive through it, and leave a legacy of good deeds.</p>
@@ -687,6 +694,38 @@ LISTEN_LIST.forEach(u => document.getElementById("listen-list").appendChild(play
   document.getElementById("surahCount").textContent=done.size+" of 114 surahs memorised in full"+(some?" · "+some+" in part":"");
 })();
 document.getElementById("yr").textContent = new Date().getFullYear();
+(function(){
+  const modal=document.createElement("div");
+  modal.className="ytmodal";
+  modal.setAttribute("role","dialog");
+  modal.setAttribute("aria-modal","true");
+  modal.setAttribute("aria-label","Video player");
+  modal.innerHTML='<button class="ytclose" aria-label="Close">&times;</button><div class="ytbox"></div>';
+  document.body.appendChild(modal);
+  const box=modal.querySelector(".ytbox");
+  let lastFocus=null;
+  function openYT(id){
+    lastFocus=document.activeElement;
+    box.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+    modal.classList.add("open");
+    modal.querySelector(".ytclose").focus();
+  }
+  function closeYT(){
+    modal.classList.remove("open");
+    box.innerHTML="";
+    if(lastFocus&&lastFocus.focus)lastFocus.focus();
+  }
+  modal.addEventListener("click",e=>{if(e.target===modal||e.target.closest(".ytclose"))closeYT();});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&modal.classList.contains("open"))closeYT();});
+  document.querySelectorAll("a[data-yt]").forEach(a=>{
+    a.addEventListener("click",e=>{
+      if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button!==0)return; // keep normal new-tab behaviour
+      e.preventDefault();
+      openYT(a.getAttribute("data-yt"));
+    });
+  });
+})();
+
 (function(){
   const d = new Date(), n = d.getDate();
   const suf = (n%100>=11 && n%100<=13) ? "th" : ({1:"st",2:"nd",3:"rd"}[n%10] || "th");
