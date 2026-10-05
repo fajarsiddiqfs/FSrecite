@@ -279,6 +279,12 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
 .ap-queue .ta{font-size:.78rem;color:#9b9ba3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ap-queue .thumb{flex:none;width:40px;height:40px;border-radius:8px;object-fit:cover;object-position:center top;background:#2a2a2d}
 .ap-cover img{width:100%;height:100%;border-radius:inherit;object-fit:cover;object-position:center top;display:block}
+.ap-queue .grp{justify-content:space-between;margin-top:4px;font-size:.8rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#cfcfd6;background:#232326}
+.ap-queue .grp .ct{margin-left:8px;font-weight:400;color:#8b8b93}
+.ap-queue .grp svg{flex:none;width:16px;height:16px;transition:transform .2s}
+.ap-queue .grp[aria-expanded=true] svg{transform:rotate(180deg)}
+.ap-queue .gbody{display:none;padding:2px 0 4px}
+.ap-queue .gbody.open{display:block}
 .ap-queue .eq{flex:none;display:flex;align-items:flex-end;gap:2px;width:16px;height:16px;visibility:hidden}
 .ap-queue .cur .eq{visibility:visible}
 .ap-queue .eq i{flex:1;height:100%;border-radius:2px;background:#fff;transform-origin:bottom;transform:scaleY(.35);animation:apEq 1s ease-in-out infinite;animation-play-state:paused}
@@ -500,9 +506,12 @@ const SURAH_NOW = 59;
 const HIFZ = { percent: 6, started: 2012 };
 
 // Floating audio player (round button, bottom-right). Upload each .mp3 to R2, then paste its public link as "src".
+// "group" = dropdown section in the playlist (e.g. "Full Surah" or "Selected Verses"). Tracks with the same group are listed together.
 // "title" = name in the bar, "artist" = small grey text under it. Add as many tracks as you like (they become the playlist).
 const AUDIO = [
-  { title:"Surah Al-Fatihah (1)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Al-Fatihah%20-%20Fajar%20Siddiq%20-%206%3A10%3A26%2C%201.31%E2%80%AFAM.mp3" }
+  { group:"Full Surah", title:"Surah Al-Fatihah (1)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Al-Fatihah%20-%20Fajar%20Siddiq%20-%206%3A10%3A26%2C%201.31%E2%80%AFAM.mp3" },
+  { group:"Selected Verses", title:"Surah Al-Isra (17:18)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Surah%20Al-Isra%2C%20Ayat%2018-%206%3A10%3A26%2C%202.58%E2%80%AFAM.mp3" },
+  { group:"Selected Verses", title:"Surah At-Tahrim (66:8)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Surah%20Tahrim%2C%20Ayat%208%20-%206%3A10%3A26%2C%202.31%E2%80%AFAM.mp3" }
 ];
 
 /* ============ Nothing below needs editing ============ */
@@ -837,9 +846,22 @@ document.getElementById("yr").textContent = new Date().getFullYear();
   setP(vol,80); setP(seek,0);
 
   // playlist panel
+  const groups={};
+  function groupBody(name){
+    if(!name)return null;
+    if(groups[name])return groups[name].body;
+    const h=document.createElement("button"); h.type="button"; h.className="grp"; h.setAttribute("aria-expanded","false");
+    h.innerHTML='<span><span class="gn"></span><span class="ct"></span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    h.querySelector(".gn").textContent=name;
+    const body=document.createElement("div"); body.className="gbody";
+    h.addEventListener("click",()=>{const o=!body.classList.contains("open");body.classList.toggle("open",o);h.setAttribute("aria-expanded",o)});
+    list.append(h,body);
+    groups[name]={head:h,body};
+    return body;
+  }
   tracks.forEach((t,k)=>{
     const b=document.createElement("button");
-    b.type="button";
+    b.type="button"; b.className="trk";
     const n=document.createElement("span"); n.className="num"; n.textContent=k+1;
     const eq=document.createElement("span"); eq.className="eq"; eq.setAttribute("aria-hidden","true"); eq.innerHTML="<i></i><i></i><i></i><i></i>";
     const tx=document.createElement("span"); tx.className="tx";
@@ -850,8 +872,10 @@ document.getElementById("yr").textContent = new Date().getFullYear();
     if(photo){const im=document.createElement("img"); im.className="thumb"; im.src=photo; im.alt=""; im.loading="lazy"; b.append(im);}
     b.append(tx);
     b.addEventListener("click",()=>load(k,true));
-    list.appendChild(b);
+    (groupBody(t.group)||list).appendChild(b);
   });
+  Object.values(groups).forEach(g=>{g.head.querySelector(".ct").textContent="("+g.body.children.length+")"});
+  function openGroupOf(k){const t=tracks[k]; const g=t&&groups[t.group]; if(g){g.body.classList.add("open");g.head.setAttribute("aria-expanded","true")}}
 
   function load(n,play){
     i=(n+tracks.length)%tracks.length;
@@ -861,7 +885,7 @@ document.getElementById("yr").textContent = new Date().getFullYear();
     artistEl.innerHTML=NAMEHTML;
     seek.value=0; setP(seek,0); seek.disabled=true;
     curEl.textContent="0:00"; durEl.textContent="0:00";
-    list.querySelectorAll("button").forEach((b,k)=>b.classList.toggle("cur",k===i));
+    list.querySelectorAll("button.trk").forEach((b,k)=>b.classList.toggle("cur",k===i)); openGroupOf(i);
     if("mediaSession" in navigator&&window.MediaMetadata){
       navigator.mediaSession.metadata=new MediaMetadata({title:t.title||"",artist:NAME});
     }
