@@ -309,8 +309,23 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
   .ap-vol,.ap-mute,.ap-shuf,.ap-rep{display:none}
   .ap-ctrl{gap:2px}
   .ap-info{justify-content:flex-start;padding-left:0}
-  .ap-cover{width:44px;height:44px}
+  .ap-bar{padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+  .ap-info{gap:10px}
+  .ap-cover{width:40px;height:40px}
+  .ap-ico{width:32px;height:32px}
+  .ap-play{width:42px;height:42px}
+  .ap-meta{display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-items:center}
+  .ap-trow{display:contents}
+  .ap-trow .ap-title{grid-column:1/-1;grid-row:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(.78rem,3.6vw,.9rem)}
+  .ap-artist{grid-column:1;grid-row:2;font-size:.8rem}
+  .ap-eq{grid-column:2;grid-row:2;justify-self:start}
   .ap-title{font-size:1rem}
+  .ap-bar .ap-meta{min-width:0;display:block}
+  .ap-bar .ap-trow{display:flex;align-items:center;gap:6px;min-width:0}
+  .ap-bar .ap-trow .ap-title{flex:1 1 auto;min-width:0;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;word-break:keep-all;font-size:clamp(.72rem,3.3vw,.85rem)}
+  .ap-bar .ap-artist{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ap-bar .ap-info{gap:8px}
+  .ap-bar{column-gap:2px}
   .ap-queue{left:12px;right:12px;width:auto;bottom:calc(var(--ap-h,120px) + 78px)}
 }
 
