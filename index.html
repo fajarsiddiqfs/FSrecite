@@ -286,7 +286,10 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
 .ap-queue .grp[aria-expanded=true] .chev{transform:rotate(180deg)}
 .ap-queue .grp .gi{display:inline-block;margin-right:8px;vertical-align:-3px}
 .ap-queue h3{display:flex;align-items:center;gap:8px}
+.ap-queue h3{position:sticky;top:-8px;z-index:2;margin:-8px -8px 4px;padding:14px 18px 8px;background:#1d1d1f}
 .ap-queue h3 svg{width:16px;height:16px;flex:none}
+.ap-queue .qx{width:30px;height:30px;padding:0;margin-left:auto;justify-content:center;border-radius:50%;color:#cfcfd6;flex:none}
+.ap-queue .qx svg{width:18px;height:18px}
 .ap-queue .gbody{display:none;padding:2px 0 4px}
 .ap-queue .gbody.open{display:block}
 .ap-queue .eq{flex:none;display:flex;align-items:flex-end;gap:2px;width:16px;height:16px;visibility:hidden}
@@ -824,7 +827,7 @@ document.getElementById("yr").textContent = new Date().getFullYear();
         '<input class="ap-range ap-vol" type="range" min="0" max="100" step="1" value="80" aria-label="Volume">'+
       '</div>'+
     '</div>'+
-    '<div class="ap-queue" id="apQueue" role="dialog" aria-label="Playlist"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15V6"/><circle cx="18.5" cy="18" r="2.5"/><path d="M12 12H3"/><path d="M16 6H3"/><path d="M12 18H3"/></svg>Playlist</h3><div class="ap-list"></div></div>'
+    '<div class="ap-queue" id="apQueue" role="dialog" aria-label="Playlist"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15V6"/><circle cx="18.5" cy="18" r="2.5"/><path d="M12 12H3"/><path d="M16 6H3"/><path d="M12 18H3"/></svg>Playlist<button type="button" class="qx" aria-label="Close playlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></h3><div class="ap-list"></div></div>'
   );
 
   const $=s=>document.querySelector(s);
@@ -956,6 +959,7 @@ document.getElementById("yr").textContent = new Date().getFullYear();
     queue.classList.toggle("show",on); qBtn.classList.toggle("on",on); qBtn.setAttribute("aria-expanded",on);
   }
   qBtn.addEventListener("click",()=>showQueue(!queue.classList.contains("show")));
+  queue.querySelector(".qx").addEventListener("click",()=>{showQueue(false);qBtn.focus()});
   document.addEventListener("click",e=>{
     if(queue.classList.contains("show")&&!queue.contains(e.target)&&!qBtn.contains(e.target))showQueue(false);
   });
@@ -986,6 +990,11 @@ document.getElementById("yr").textContent = new Date().getFullYear();
     window.removeEventListener("wheel",autoOpen);
     window.removeEventListener("touchmove",autoOpen);
     if(!document.body.classList.contains("ap-open"))setOpen(true);
+    // desktop: also pop up the playlist with every dropdown section expanded
+    if(window.matchMedia("(min-width:700px)").matches){
+      Object.values(groups).forEach(g=>{g.body.classList.add("open");g.head.setAttribute("aria-expanded","true")});
+      showQueue(true);
+    }
   };
   window.addEventListener("scroll",autoOpen,{passive:true});
   window.addEventListener("wheel",autoOpen,{passive:true});
