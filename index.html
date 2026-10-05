@@ -220,7 +220,7 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
 .ap-open .ap-bar{transform:none;visibility:visible;transition:transform .3s cubic-bezier(.2,.7,.2,1)}
 .ap-bar :focus-visible,.ap-queue :focus-visible{outline-color:#1d9bf0}
 
-.ap-info{grid-area:info;display:flex;align-items:center;gap:14px;min-width:0}
+.ap-info{grid-area:info;display:flex;align-items:center;justify-content:center;gap:14px;min-width:0;padding-left:12px}
 .ap-cover{flex:none;width:52px;height:52px;border-radius:10px;background:#2a2a2d;display:grid;place-items:center}
 .ap-cover svg{width:24px;height:24px;stroke:#b9b9c0;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .ap-meta{min-width:0}
@@ -308,6 +308,7 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
   .ap-q{grid-area:q}
   .ap-vol,.ap-mute,.ap-shuf,.ap-rep{display:none}
   .ap-ctrl{gap:2px}
+  .ap-info{justify-content:flex-start;padding-left:10px}
   .ap-cover{width:44px;height:44px}
   .ap-title{font-size:1rem}
   .ap-queue{left:12px;right:12px;width:auto;bottom:calc(var(--ap-h,120px) + 78px)}
@@ -931,6 +932,25 @@ document.getElementById("yr").textContent = new Date().getFullYear();
     }
   }
   fab.addEventListener("click",()=>setOpen(!document.body.classList.contains("ap-open")));
+
+  // auto-open the first time the visitor starts scrolling, and start playing
+  let autoOpened=false;
+  const autoOpen=()=>{
+    if(autoOpened)return; autoOpened=true;
+    window.removeEventListener("scroll",autoOpen);
+    window.removeEventListener("wheel",autoOpen);
+    window.removeEventListener("touchmove",autoOpen);
+    if(!document.body.classList.contains("ap-open"))setOpen(true);
+  };
+  window.addEventListener("scroll",autoOpen,{passive:true});
+  window.addEventListener("wheel",autoOpen,{passive:true});
+  window.addEventListener("touchmove",autoOpen,{passive:true});
+  // browsers block sound until the visitor interacts: if autoplay was blocked, start on the first click/tap anywhere
+  const kick=()=>{
+    window.removeEventListener("click",kick);
+    if(document.body.classList.contains("ap-open")&&audio.paused&&loaded)audio.play().catch(()=>{});
+  };
+  window.addEventListener("click",kick);
 
   // only one thing plays at a time: starting a video pauses the audio
   document.addEventListener("play",e=>{ if(e.target!==audio&&!audio.paused)audio.pause(); },true);
