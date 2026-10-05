@@ -272,7 +272,21 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
 .ap-queue button.cur{color:#1d9bf0}
 .ap-queue .num{flex:none;width:1.5em;text-align:center;font-size:.8rem;color:#8b8b93;font-variant-numeric:tabular-nums}
 .ap-queue .cur .num{color:#1d9bf0}
+.ap-queue button{gap:10px}
 .ap-queue .tt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ap-queue .tx{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.ap-queue .ta{font-size:.78rem;color:#9b9ba3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ap-queue .thumb{flex:none;width:40px;height:40px;border-radius:8px;object-fit:cover;object-position:center top;background:#2a2a2d}
+.ap-cover img{width:100%;height:100%;border-radius:inherit;object-fit:cover;object-position:center top;display:block}
+.ap-queue .eq{flex:none;display:flex;align-items:flex-end;gap:2px;width:16px;height:16px;visibility:hidden}
+.ap-queue .cur .eq{visibility:visible}
+.ap-queue .eq i{flex:1;height:100%;border-radius:2px;background:#1d9bf0;transform-origin:bottom;transform:scaleY(.35);animation:apEq 1s ease-in-out infinite;animation-play-state:paused}
+.ap-queue .eq i:nth-child(2){animation-duration:.75s;animation-delay:-.35s}
+.ap-queue .eq i:nth-child(3){animation-duration:1.15s;animation-delay:-.6s}
+.ap-queue .eq i:nth-child(4){animation-duration:.9s;animation-delay:-.2s}
+.ap-queue.playing .cur .eq i{animation-play-state:running}
+@keyframes apEq{0%,100%{transform:scaleY(.2)}50%{transform:scaleY(1)}}
+@media(prefers-reduced-motion:reduce){.ap-queue .eq i{animation:none}}
 
 @media(hover:none){
   .ap-range::-webkit-slider-thumb{opacity:1}
@@ -462,6 +476,7 @@ const HIFZ = { percent: 6, started: 2012 };
 // Floating audio player (round button, bottom-right). Upload each .mp3 to R2, then paste its public link as "src".
 // "title" = name in the bar, "artist" = small grey text under it. Add as many tracks as you like (they become the playlist).
 const AUDIO = [
+  { title:"Surah Al-Fatihah (1)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/al-fatihah.mp3" },
   { title:"Al-Baqarah (2:106–108)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/al-baqarah-2-106-108.mp3" },
   { title:"Surah An-Nur (35–36)",   artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/an-nur-35-36.mp3" }
 ];
@@ -777,6 +792,10 @@ document.getElementById("yr").textContent = new Date().getFullYear();
 
   const $=s=>document.querySelector(s);
   const fab=$(".ap-fab"), bar=$(".ap-bar"), queue=$(".ap-queue"), list=$(".ap-list");
+  // thumbnail = the hero photo
+  const heroImg=document.querySelector(".hero-img img");
+  const photo=heroImg?(heroImg.currentSrc||heroImg.src):"";
+  if(photo){const cv=$(".ap-cover"); cv.innerHTML=""; const im=document.createElement("img"); im.src=photo; im.alt=""; cv.appendChild(im);}
   const titleEl=$(".ap-title"), artistEl=$(".ap-artist"), curEl=$(".ap-cur"), durEl=$(".ap-dur");
   const seek=$(".ap-seek"), vol=$(".ap-vol"), playBtn=$(".ap-play"), qBtn=$(".ap-q"), muteBtn=$(".ap-mute");
   const shufBtn=$(".ap-shuf"), repBtn=$(".ap-rep");
@@ -795,8 +814,14 @@ document.getElementById("yr").textContent = new Date().getFullYear();
     const b=document.createElement("button");
     b.type="button";
     const n=document.createElement("span"); n.className="num"; n.textContent=k+1;
+    const eq=document.createElement("span"); eq.className="eq"; eq.setAttribute("aria-hidden","true"); eq.innerHTML="<i></i><i></i><i></i><i></i>";
+    const tx=document.createElement("span"); tx.className="tx";
     const tt=document.createElement("span"); tt.className="tt"; tt.textContent=t.title||"Untitled";
-    b.append(n,tt);
+    const ta=document.createElement("span"); ta.className="ta"; ta.textContent=t.artist||"";
+    tx.append(tt,ta);
+    b.append(n,eq);
+    if(photo){const im=document.createElement("img"); im.className="thumb"; im.src=photo; im.alt=""; im.loading="lazy"; b.append(im);}
+    b.append(tx);
     b.addEventListener("click",()=>load(k,true));
     list.appendChild(b);
   });
@@ -843,10 +868,10 @@ document.getElementById("yr").textContent = new Date().getFullYear();
   });
 
   // audio state
-  audio.addEventListener("play",()=>{bar.classList.add("playing");playBtn.setAttribute("aria-label","Pause")});
-  audio.addEventListener("pause",()=>{bar.classList.remove("playing");playBtn.setAttribute("aria-label","Play")});
+  audio.addEventListener("play",()=>{queue.classList.add("playing");bar.classList.add("playing");playBtn.setAttribute("aria-label","Pause")});
+  audio.addEventListener("pause",()=>{queue.classList.remove("playing");bar.classList.remove("playing");playBtn.setAttribute("aria-label","Play")});
   audio.addEventListener("ended",()=>{ if(rep===2){audio.currentTime=0;audio.play().catch(()=>{});return} next(true); });
-  audio.addEventListener("error",()=>{ if(loaded){artistEl.textContent="Couldn’t load this audio"; bar.classList.remove("playing");} });
+  audio.addEventListener("error",()=>{ if(loaded){artistEl.textContent="Couldn’t load this audio"; bar.classList.remove("playing"); queue.classList.remove("playing");} });
   audio.addEventListener("loadedmetadata",()=>{
     if(isFinite(audio.duration)){durEl.textContent=fmt(audio.duration);seek.disabled=false}
   });
