@@ -124,6 +124,11 @@ section.wrap{padding-top:clamp(40px,7vw,64px);padding-bottom:0}
 .sgrid li{display:flex;align-items:center;gap:6px;padding:10px 10px 10px 9px;border-radius:12px;background:var(--soft);font-size:.8rem;line-height:1.2;min-height:48px}
 @media(min-width:480px){.sgrid li{font-size:.85rem;gap:8px;padding:10px 12px 10px 10px}}
 @media(min-width:800px){.sgrid li{font-size:.76rem;gap:6px;padding:9px 8px 9px 10px;min-height:42px;border-radius:10px}}
+.sgrid li{position:relative;transition:transform .15s,box-shadow .15s}
+.sgrid li:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.sgrid a.nm{color:inherit;text-decoration:none}
+.sgrid a.nm::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.sgrid li:focus-within{outline:2px solid #1d9bf0;outline-offset:2px}
 .sgrid .n{color:var(--muted);font-size:.7rem;min-width:1.6em;font-variant-numeric:tabular-nums}
 @media(min-width:800px){.sgrid .n{font-size:.66rem;min-width:1.5em}}
 .sgrid .nm{flex:1;min-width:0;text-align:center;font-weight:500;overflow-wrap:break-word;hyphens:manual}
@@ -674,9 +679,8 @@ LISTEN_LIST.forEach(u => document.getElementById("listen-list").appendChild(play
     const n=i+1, isDone=done.has(n), isNow=(n===SURAH_NOW&&!isDone), part=SOME[n], isSome=(!isDone&&!isNow&&part!==undefined);
     const li=document.createElement("li");
     li.className=isDone?"done":(isNow?"now":(isSome?"some":""));
-    if(isSome&&part)li.title="Ayah "+part;
     li.setAttribute("aria-label","Surah "+n+" "+nm+(isDone?", memorised in full":(isNow?", currently memorising":(isSome?", some ayah memorised"+(part?" ("+part+")":""):""))));
-    li.innerHTML='<span class="n">'+n+'</span><span class="nm">'+nm+'</span><span class="ck">'+tick+'</span>';
+    li.innerHTML='<span class="n">'+n+'</span><a class="nm" href="https://quran.com/'+n+'" target="_blank" rel="noopener" title="Open Surah '+nm+' on Quran.com'+((isSome&&part)?' (memorised: ayah '+part+')':'')+'">'+nm+'</a><span class="ck">'+tick+'</span>';
     ul.appendChild(li);
   });
   const some=Object.keys(SOME).filter(k=>!done.has(+k)).length;
