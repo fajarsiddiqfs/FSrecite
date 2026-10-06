@@ -185,6 +185,18 @@ section.wrap{padding-top:clamp(40px,7vw,64px);padding-bottom:0}
   .wnav.next{right:max(6px,env(safe-area-inset-right,0px))}
 }
 
+/* ROW CONTROLS: round arrows + dots (blue pill = current) under Watch Now / Video Snippets */
+.wctl{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.cbtn{flex:none;width:44px;height:44px;border:0;padding:0;border-radius:50%;background:#f4f4f5;display:grid;place-items:center;cursor:pointer;transition:background .15s,transform .15s}
+.cbtn:hover{background:#e9e9ec}
+.cbtn:active{transform:scale(.94)}
+.cbtn svg{width:20px;height:20px;fill:none;stroke:#111;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cdots{display:flex;align-items:center;justify-content:center;gap:6px;min-height:20px}
+.cdot{position:relative;flex:none;width:8px;height:8px;border:0;padding:0;border-radius:50%;background:#cfcfd3;cursor:pointer;transition:width .25s,background .25s}
+.cdot::after{content:"";position:absolute;inset:-8px -3px}
+.cdot.sm{width:5px;height:5px}
+.cdot.on{width:20px;border-radius:5px;background:#3563e9}
+
 /* SURAH CHECKLIST */
 .sgrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 @media(min-width:480px){.sgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -467,6 +479,7 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
       <div class="wtrack ltrack" id="lgrid"></div>
     </div>
   </div>
+  <div class="wctl" id="lctl"></div>
 </section>
 
 <!-- LISTEN NOW -->
@@ -485,6 +498,7 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
       <div class="wtrack" id="wtrack"></div>
     </div>
   </div>
+  <div class="wctl" id="wctl"></div>
 </section>
 
 <!-- MEMORISING NOW -->
@@ -877,10 +891,10 @@ LISTEN_LIST.forEach(u => document.getElementById("listen-list").appendChild(snip
   }));
   // Auto-scroll to the left; two-finger swipe / trackpad / wheel scrolls by hand and pauses the motion.
   function marquee(sc,track,n,speed){
-    let S=0,pos=0,last=0,hold=0,hovering=false;
+    let S=0,pos=0,last=0,hold=0,hovering=false,wshift=0,raf=0;const cbs=[];
     const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
     function measure(){const k=track.children;if(k.length>n)S=k[n].offsetLeft-k[0].offsetLeft;}
-    function wrap(){ if(!S)return; if(sc.scrollLeft>=2*S)sc.scrollLeft-=S; else if(sc.scrollLeft<S)sc.scrollLeft+=S; pos=sc.scrollLeft; }
+    function wrap(){ if(!S)return; if(sc.scrollLeft>=2*S){sc.scrollLeft-=S;wshift-=S;} else if(sc.scrollLeft<S){sc.scrollLeft+=S;wshift+=S;} pos=sc.scrollLeft; }
     function init(){measure();sc.scrollLeft=S;pos=S;}
     addEventListener("load",init); init();
     addEventListener("resize",()=>{const r=S?(sc.scrollLeft-S)/S:0;measure();sc.scrollLeft=S+r*S;pos=sc.scrollLeft;});
@@ -890,16 +904,56 @@ LISTEN_LIST.forEach(u => document.getElementById("listen-list").appendChild(snip
     sc.addEventListener("pointerdown",()=>pause(3000));
     sc.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")hovering=true;});
     sc.addEventListener("pointerleave",()=>{hovering=false;pause(800);});
-    sc.addEventListener("scroll",()=>{ if(Math.abs(sc.scrollLeft-pos)>1.5){pause(2500);} wrap(); },{passive:true});
+    sc.addEventListener("scroll",()=>{ if(Math.abs(sc.scrollLeft-pos)>1.5){pause(2500);} wrap(); if(!raf)raf=requestAnimationFrame(()=>{raf=0;cbs.forEach(f=>f(api.idx()));}); },{passive:true});
     function tick(t){
       const dt=Math.min(64,t-(last||t));last=t;
       if(!reduce&&!hovering&&t>hold&&S){pos+=speed*dt;sc.scrollLeft=pos;wrap();}
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
+    // ---- buttons / dots API: glide by one card, jump to a card, report the current card ----
+    function glide(target){
+      if(reduce){sc.scrollLeft=target;pos=sc.scrollLeft;return;}
+      const from=sc.scrollLeft, d=target-from, ws0=wshift, t0=performance.now(), dur=450;
+      hold=Infinity;
+      (function f(t){
+        const k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3);
+        sc.scrollLeft=from+d*e+(wshift-ws0); pos=sc.scrollLeft;
+        if(k<1)requestAnimationFrame(f); else hold=performance.now()+2500;
+      })(t0);
+    }
+    const api={
+      n,
+      idx(){ if(!S)return 0; const st=S/n; return ((Math.round((sc.scrollLeft-S)/st)%n)+n)%n; },
+      by(dir){ if(!S)return; const st=S/n, k=Math.round((sc.scrollLeft-S)/st); glide(S+(k+dir)*st); },
+      to(i){ if(!S)return; const st=S/n; let d=(S+i*st)-sc.scrollLeft; if(d>S/2)d-=S; else if(d<-S/2)d+=S; glide(sc.scrollLeft+d); },
+      onmove(f){ cbs.push(f); }
+    };
+    return api;
   }
-  marquee(document.getElementById("watch"),tr,WATCH.length,0.035);
-  marquee(document.getElementById("lwatch"),lg,LONG.length,0.04);
+  // arrows + dots under a row (dots: up to 7 shown, edge dots shrink when more exist)
+  function controls(api,id,label){
+    const host=document.getElementById(id); if(!host||api.n<2)return;
+    const btn=(dir,d,lab)=>{const b=document.createElement("button");b.type="button";b.className="cbtn";b.setAttribute("aria-label",lab);b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+d+'"/></svg>';b.addEventListener("click",()=>api.by(dir));return b;};
+    const dots=document.createElement("div"); dots.className="cdots";
+    host.append(btn(-1,"M19 12H5M11 6l-6 6 6 6","Previous "+label),dots,btn(1,"M5 12h14M13 6l6 6-6 6","Next "+label));
+    let shown=-1;
+    function render(a){
+      if(a===shown)return; shown=a;
+      const n=api.n, MAXD=7; let s0=0,e0=n-1;
+      if(n>MAXD){s0=Math.max(0,Math.min(n-MAXD,a-Math.floor(MAXD/2)));e0=s0+MAXD-1;}
+      dots.textContent="";
+      for(let k=s0;k<=e0;k++){
+        const d=document.createElement("button"); d.type="button";
+        d.className="cdot"+(k===a?" on":(((k===s0&&s0>0)||(k===e0&&e0<n-1))?" sm":""));
+        d.setAttribute("aria-label",label+" "+(k+1)); if(k===a)d.setAttribute("aria-current","true");
+        d.addEventListener("click",()=>api.to(k)); dots.appendChild(d);
+      }
+    }
+    api.onmove(render); render(api.idx());
+  }
+  controls(marquee(document.getElementById("watch"),tr,WATCH.length,0.035),"wctl","Video snippet");
+  controls(marquee(document.getElementById("lwatch"),lg,LONG.length,0.04),"lctl","Long video");
 })();
 (function(){
   const p=Math.max(0,Math.min(100,HIFZ.percent));
