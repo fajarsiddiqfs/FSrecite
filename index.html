@@ -413,6 +413,14 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
   </div>
 </section>
 
+<!-- LISTEN NOW -->
+<section class="wrap">
+  <h2 class="big">Audio Snippets<small>Selected Verses</small></h2>
+  <div class="listen">
+    <div class="listen-right" id="listen-list"></div>
+  </div>
+</section>
+
 <!-- WATCH NOW -->
 <section class="wrap">
   <h2 class="big">Video Snippets<small>via Short-Form Videos</small></h2>
@@ -420,14 +428,6 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
     <div class="watch" id="watch">
       <div class="wtrack" id="wtrack"></div>
     </div>
-  </div>
-</section>
-
-<!-- LISTEN NOW -->
-<section class="wrap">
-  <h2 class="big">Audio Snippets<small>Selected Verses</small></h2>
-  <div class="listen">
-    <div class="listen-right" id="listen-list"></div>
   </div>
 </section>
 
@@ -534,9 +534,9 @@ const HIFZ = { percent: 6, started: 2012 };
 // "group" = dropdown section in the playlist (e.g. "Full Surah" or "Selected Verses"). Tracks with the same group are listed together.
 // "title" = name in the bar, "artist" = small grey text under it. Add as many tracks as you like (they become the playlist).
 const AUDIO = [
-  { group:"Full Surah", title:"Surah Al-Fatihah (1)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Al-Fatihah%20-%20Fajar%20Siddiq%20-%206%3A10%3A26%2C%201.31%E2%80%AFAM.mp3" },
-  { group:"Selected Verses", title:"Surah Al-Isra (17:18)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Surah%20Al-Isra%2C%20Ayat%2018-%206%3A10%3A26%2C%202.58%E2%80%AFAM.mp3" },
-  { group:"Selected Verses", title:"Surah At-Tahrim (66:8)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Surah%20Tahrim%2C%20Ayat%208%20-%206%3A10%3A26%2C%202.31%E2%80%AFAM.mp3" }
+  { group:"Full Surah", title:"Surah Al-Fatihah (1)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/al-fatihah.mp3" },
+  { group:"Selected Verses", title:"Surah Al-Isra (17:18)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/al-isra-17-18.mp3" },
+  { group:"Selected Verses", title:"Surah At-Tahrim (66:8)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/at-tahrim-66-8.mp3" }
 ];
 
 /* ============ Nothing below needs editing ============ */
@@ -975,7 +975,7 @@ document.getElementById("yr").textContent = new Date().getFullYear();
   audio.addEventListener("play",()=>{window.dispatchEvent(new Event("main-play"));queue.classList.add("playing");bar.classList.add("playing");playBtn.setAttribute("aria-label","Pause")});
   audio.addEventListener("pause",()=>{queue.classList.remove("playing");bar.classList.remove("playing");playBtn.setAttribute("aria-label","Play")});
   audio.addEventListener("ended",()=>{ if(rep===2){audio.currentTime=0;audio.play().catch(()=>{});return} next(true); });
-  audio.addEventListener("error",()=>{ console.warn("Audio failed to load:",audio.src,audio.error&&audio.error.code); if(loaded){artistEl.innerHTML=NAMEHTML; bar.classList.remove("playing"); queue.classList.remove("playing");} });
+  audio.addEventListener("error",()=>{ if(loaded){artistEl.textContent="Audio unavailable right now"; seek.disabled=true; bar.classList.remove("playing"); queue.classList.remove("playing");} });
   audio.addEventListener("loadedmetadata",()=>{
     if(isFinite(audio.duration)){durEl.textContent=fmt(audio.duration);seek.disabled=false}
   });
