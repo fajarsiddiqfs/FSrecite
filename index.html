@@ -325,6 +325,9 @@ body.ap-open{padding-bottom:var(--ap-h,0px)}
 .ap-eq i:nth-child(4){animation-duration:.9s;animation-delay:-.2s}
 .ap-bar.playing .ap-eq i{animation-play-state:running}
 @media(prefers-reduced-motion:reduce){.ap-eq i{animation:none}}
+/* 4-bar equalizer sits on the LEFT, beside the thumbnail */
+.ap-info>.ap-eq{align-self:center;width:18px;height:22px}
+
 @media(prefers-reduced-motion:reduce){.ap-queue .eq i{animation:none}}
 
 @media(hover:none){
@@ -534,9 +537,9 @@ const HIFZ = { percent: 6, started: 2012 };
 // "group" = dropdown section in the playlist (e.g. "Full Surah" or "Selected Verses"). Tracks with the same group are listed together.
 // "title" = name in the bar, "artist" = small grey text under it. Add as many tracks as you like (they become the playlist).
 const AUDIO = [
-  { group:"Full Surah", title:"Surah Al-Fatihah (1)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/al-fatihah.mp3" },
-  { group:"Selected Verses", title:"Surah Al-Isra (17:18)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/al-isra-17-18.mp3" },
-  { group:"Selected Verses", title:"Surah At-Tahrim (66:8)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/at-tahrim-66-8.mp3" }
+  { group:"Full Surah", title:"Surah Al-Fatihah (1)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Al-Fatihah%20-%20Fajar%20Siddiq%20-%206%3A10%3A26%2C%201.31%E2%80%AFAM.mp3" },
+  { group:"Selected Verses", title:"Surah Al-Isra (17:18)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Surah%20Al-Isra%2C%20Ayat%2018-%206%3A10%3A26%2C%202.58%E2%80%AFAM.mp3" },
+  { group:"Selected Verses", title:"Surah At-Tahrim (66:8)", artist:"Fajar Siddiq", src:"https://pub-80cf938ac23747d88878235161f9dcd3.r2.dev/Surah%20Tahrim%2C%20Ayat%208%20-%206%3A10%3A26%2C%202.31%E2%80%AFAM.mp3" }
 ];
 
 /* ============ Nothing below needs editing ============ */
@@ -855,7 +858,7 @@ document.getElementById("yr").textContent = new Date().getFullYear();
   document.body.insertAdjacentHTML("beforeend",
     '<button class="ap-fab" type="button" aria-label="Open audio player" aria-expanded="false" aria-controls="apBar">'+ICON.phones+ICON.close+'</button>'+
     '<div class="ap-bar" id="apBar" role="region" aria-label="Audio player">'+
-      '<div class="ap-info"><div class="ap-cover">'+ICON.book+'</div><div class="ap-meta"><div class="ap-trow"><span class="ap-title"></span><span class="ap-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div><span class="ap-artist"></span></div></div>'+
+      '<div class="ap-info"><span class="ap-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div class="ap-cover">'+ICON.book+'</div><div class="ap-meta"><div class="ap-trow"><span class="ap-title"></span></div><span class="ap-artist"></span></div></div>'+
       '<div class="ap-ctrl">'+
         '<button class="ap-ico ap-shuf" type="button" aria-label="Shuffle" aria-pressed="false">'+ICON.shuffle+'</button>'+
         '<button class="ap-ico fill ap-prev" type="button" aria-label="Previous track">'+ICON.prev+'</button>'+
