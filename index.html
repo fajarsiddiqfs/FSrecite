@@ -149,6 +149,15 @@ section.wrap{padding-top:clamp(40px,7vw,64px);padding-bottom:0}
 .whead{display:flex;align-items:center;gap:10px}
 .wavs{flex:none;width:38px;height:38px;border-radius:50%;overflow:hidden;background:#2a2a2d;display:grid;place-items:center;font-weight:700}
 .wavs img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.weq{flex:none;display:flex;align-items:center;gap:3px;height:20px;margin-left:-2px}
+.weq i{display:block;width:3px;height:100%;background:#fff;border-radius:2px;transform-origin:center;transform:scaleY(.25);animation:weqb .9s ease-in-out infinite}
+.weq i:nth-child(1){animation-duration:.8s}
+.weq i:nth-child(2){animation-duration:1.1s;animation-delay:-.4s}
+.weq i:nth-child(3){animation-duration:.7s;animation-delay:-.2s}
+.weq i:nth-child(4){animation-duration:1s;animation-delay:-.6s}
+.wmodal.paused .weq i{animation-play-state:paused}
+@keyframes weqb{0%,100%{transform:scaleY(.25)}25%{transform:scaleY(1)}50%{transform:scaleY(.45)}75%{transform:scaleY(.85)}}
+@media(prefers-reduced-motion:reduce){.weq i{animation:none;transform:scaleY(.6)}}
 .wwho{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25;text-shadow:0 1px 6px rgba(0,0,0,.6)}
 .wwho b{font-size:.95rem;font-weight:700}
 .wwho b{display:flex;align-items:center;gap:5px}
@@ -663,19 +672,19 @@ LISTEN_LIST.forEach(u => document.getElementById("listen-list").appendChild(snip
       '<button type="button" class="wnav prev" aria-label="Previous video">'+svg("M15 5l-7 7 7 7")+'</button>'+
       '<div class="wstage">'+
         '<div class="wtop"><div class="wbars"></div>'+
-          '<div class="whead"><span class="wavs"></span><div class="wwho"><b>Fajar Siddiq<svg class="wver" viewBox="0 0 24 24" role="img" aria-label="Verified"><path fill="#0095f6" d="M12 1.5l2.6 1.9 3.2-.2 1 3 2.6 1.9-.9 3.1.9 3.1-2.6 1.9-1 3-3.2-.2L12 22.5l-2.6-1.9-3.2.2-1-3-2.6-1.9.9-3.1-.9-3.1 2.6-1.9 1-3 3.2.2z"/><path d="M7.9 12.4l2.7 2.7 5.5-5.8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></b><span class="wsub">recite.fajarsiddiq.com</span></div>'+
+          '<div class="whead"><span class="wavs"></span><span class="weq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div class="wwho"><b>Fajar Siddiq<svg class="wver" viewBox="0 0 24 24" role="img" aria-label="Verified"><path fill="#0095f6" d="M12 1.5l2.6 1.9 3.2-.2 1 3 2.6 1.9-.9 3.1.9 3.1-2.6 1.9-1 3-3.2-.2L12 22.5l-2.6-1.9-3.2.2-1-3-2.6-1.9.9-3.1-.9-3.1 2.6-1.9 1-3 3.2.2z"/><path d="M7.9 12.4l2.7 2.7 5.5-5.8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></b><span class="wsub">recite.fajarsiddiq.com</span></div>'+
             '<button type="button" class="wbtn wpp-btn" aria-label="Play / pause">'+svg(D_PAUSE,"i-z")+svg(D_PLAY,"i-p")+'</button>'+
             '<button type="button" class="wbtn wclose" aria-label="Close">'+svg("M18 6 6 18M6 6l12 12")+'</button>'+
           '</div></div>'+
         '<div class="wbig">'+svg(D_PLAY)+'</div>'+
-        '<div class="wbot"><div class="wttl"></div><div class="wtime">0:00 / 0:00</div></div>'+
+        '<div class="wbot"><div class="wtime">0:00 / 0:00</div></div>'+
       '</div>'+
       '<button type="button" class="wnav next" aria-label="Next video">'+svg("M9 5l7 7-7 7")+'</button>'+
       '<div class="wside r"></div>'+
     '</div>';
   document.body.appendChild(modal);
   const $q=q=>modal.querySelector(q);
-  const stage=$q(".wstage"), bars=$q(".wbars"), ttl=$q(".wttl"), avs=$q(".wavs"), tm=$q(".wtime"), row=$q(".wrow"),
+  const stage=$q(".wstage"), bars=$q(".wbars"), avs=$q(".wavs"), tm=$q(".wtime"), row=$q(".wrow"),
         sideL=$q(".wside.l"), sideR=$q(".wside.r"), prevB=$q(".wnav.prev"), nextB=$q(".wnav.next");
   const fmt=t=>{t=isFinite(t)&&t>0?Math.floor(t):0;return Math.floor(t/60)+":"+String(t%60).padStart(2,"0");};
   let cur=null, curV=null, curFill=null;
@@ -699,9 +708,8 @@ LISTEN_LIST.forEach(u => document.getElementById("listen-list").appendChild(snip
     if(v.thumb)b.style.backgroundImage="url('"+v.thumb+"')";
     const ring=document.createElement("span"); ring.className="wring"; ring.appendChild(avatarEl());
     const nm=document.createElement("span"); nm.className="wnm";
-    const t=document.createElement("span"); t.className="wnt"; t.textContent=v.title||"";
     const ct=document.createElement("small"); ct.textContent=posOf(l,j)+" / "+n;
-    nm.append(t,ct); b.append(ring,nm);
+    nm.append(ct); b.append(ring,nm);
     b.addEventListener("click",e=>{e.stopPropagation();openList(l,j);});
     return b;
   }
@@ -768,7 +776,6 @@ LISTEN_LIST.forEach(u => document.getElementById("listen-list").appendChild(snip
     modal.classList.add("open"); modal.classList.remove("paused");
     const n=playable(list);
     prevB.hidden=nextB.hidden=n<2;
-    ttl.textContent=v0.title||"";
     avs.textContent=""; avs.appendChild(avatarEl());
     renderBars(list,i); renderSides(list,i,n);
     v.currentTime=0; upd();
